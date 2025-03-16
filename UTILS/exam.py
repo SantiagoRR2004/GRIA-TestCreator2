@@ -22,7 +22,8 @@ def examGenerator(
         - numberOfExams: The number of exams to generate
         - numberOfQuestions: The number of questions per exam
         - questionsPerTopic: A dictionary with the number of questions
-          per topic to generate
+          per topic to generate. The keys must be absolute paths to the files
+          with the questions
 
     Returns:
         - None
