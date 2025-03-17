@@ -90,8 +90,8 @@ def examWriter(questions, fileOutName):
             return NaN;
         } //If it is incorrect we return the penalty for random guessing
         else {
-            console.log(question.querySelector("p").innerHTML.split(":")[0] + " - Score: -0.5/");
-            return -0.5;
+            console.log(question.querySelector("p").innerHTML.split(":")[0] + " - Score: -1/" + (numOptions - 1));
+            return -1/(numOptions - 1);
         }
     }
 """
@@ -151,8 +151,8 @@ def examWriter(questions, fileOutName):
         } // If there are incorrect answers we return the penalty for random guessing
         else {
             correctAnswer.classList.add("incorrect");
-            console.log(question.querySelector("p").innerHTML.split(":")[0] + " - Score: 0");
-            return 0;
+            console.log(question.querySelector("p").innerHTML.split(":")[0] + " - Score: -0.5");
+            return -0.5;
         }
 
     }
