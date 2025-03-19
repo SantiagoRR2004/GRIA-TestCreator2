@@ -3,7 +3,7 @@ from typing import List
 from UTILS import questionTypes
 
 
-def examWriter(questions, fileOutName):
+def examWriter(questions, fileOutName, style):
     submitFormFunction = """function submitForm() {
         var form = document.getElementById("testForm");
         form.elements["submitButton"].disabled = true;
@@ -158,44 +158,16 @@ def examWriter(questions, fileOutName):
     }
 """
 
-    html_head = """
+    with open(style, "r", encoding="utf-8") as file:
+        styles = file.read()
+
+    html_head = f"""
     <html>
     <head>
         <meta charset="UTF-8">
         <title>Examen</title>
         <style>
-            body {font-family: Arial, sans-serif; 
-                }
-                .correct {
-                    color: green;
-                }
-                .incorrect {
-                    color: red;
-                }
-                .question {
-                    margin-bottom: 19px;
-                }
-                .question p {
-                    font-weight: bold;
-                    font-size: 19px;
-                }
-                .question span {
-                    font-size: 17px;
-                    font-style: italic;
-                }
-                .question li {
-                    font-size: 18px;
-                    list-style-type: none;
-                }
-                .correct-answer {
-                    display: none;
-                    font-weight: bold;
-                    font-size: 16px;
-                }
-                .answered {
-                    pointer-events: none;
-                }
-            
+            {styles}     
         </style>
     </head>
     <body>
