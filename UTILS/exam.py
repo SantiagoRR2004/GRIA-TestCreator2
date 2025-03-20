@@ -30,10 +30,15 @@ def examGenerator(
     Returns:
         - None
     """
-    if style == "default":
-        css = "UTILS/style.css"
-    elif style == "legacy":
-        css = "UTILS/legacy.css"
+    match style:
+        case "default":
+            css = "UTILS/style.css"
+        case "legacy":
+            css = "UTILS/legacy.css"
+        case "dark":
+            css = "UTILS/dark.css"
+        case _:
+            raise ValueError(f"Unknown style: {style}")
 
     for exam in range(numberOfExams):
         questions = qUtils.questionGenerator(
