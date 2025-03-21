@@ -2,8 +2,8 @@ from UTILS import exam
 
 
 numExams = 1
-numOfQuestions = 10
-folder = "PIC"
+numOfQuestions = 30
+folder = "SIRE"
 
 if __name__ == "__main__":
     exam.examGenerator(folder, numExams, numOfQuestions)
