@@ -3,10 +3,11 @@ import re
 from joinJsons import join_jsons
 import json
 
+
 def get_moovi_data(use_file=None):
-    with open(path, encoding='utf-8') as html_file:
+    with open(path, encoding="utf-8") as html_file:
         content = html_file.read()
-        page = BeautifulSoup(content, 'html.parser')
+        page = BeautifulSoup(content, "html.parser")
 
     preguntas = []
     opciones = []
@@ -14,29 +15,29 @@ def get_moovi_data(use_file=None):
     feedbacks = []
 
     # Colle as preguntas e opcións do div parent
-    formulation = page.find_all('div', class_ = 'formulation clearfix')
+    formulation = page.find_all("div", class_="formulation clearfix")
     # print(formulation)
 
     for item in formulation:
-        pregunta = item.find('div', class_ = 'qtext').text
+        pregunta = item.find("div", class_="qtext").text
 
-        opcion = item.find_all('div', class_ = 'flex-fill ml-1')
+        opcion = item.find_all("div", class_="flex-fill ml-1")
         opcion = [elem.text for elem in opcion]
-        
+
         # find response in the style of "r0 correct"
-        correct = item.find_all('div', class_ = re.compile('.* correct'))
-        correct = [elem.find('div', class_ = 'flex-fill ml-1').text for elem in correct]
+        correct = item.find_all("div", class_=re.compile(".* correct"))
+        correct = [elem.find("div", class_="flex-fill ml-1").text for elem in correct]
         correct_n = [opcion.index(elem) for elem in correct]
 
-        # Colle a sección coa pregunta e feedback, e inclúe o feedback se a pregunta o ten 
-        feedback = item.find_all('div', class_ = 'feedback')
+        # Colle a sección coa pregunta e feedback, e inclúe o feedback se a pregunta o ten
+        feedback = item.find_all("div", class_="feedback")
 
         if feedback:
             # FIXME legacy, might not work for all cases
-            generalfeedback = feedback.find('div', class_ = 'generalfeedback')
-            correcta = feedback.find('div', class_ = 'rightanswer')
+            generalfeedback = feedback.find("div", class_="generalfeedback")
+            correcta = feedback.find("div", class_="rightanswer")
             feedbacks.append(generalfeedback.text)
-        
+
         preguntas.append(pregunta)
         opciones.append(opcion)
         correctas.append(correct_n)
@@ -81,40 +82,36 @@ def format_into_json(questions, answers, type, correct, filepath=None) -> dict:
             dict_q = {
                 "question": q,
                 "options": a,
-                "correct_options": c, 
+                "correct_options": c,
                 "questionType": type,
             }
         dict_qs["questions"].append(dict_q)
 
     if filepath:
-        with open(filepath, "w", encoding='utf-8') as file:
+        with open(filepath, "w", encoding="utf-8") as file:
             json.dump(dict_qs, file, indent=2, ensure_ascii=False)
 
     return dict_qs
 
-if __name__ == '__main__':
-    '''Coloca aquí o path do teu ficheiro de html
+
+if __name__ == "__main__":
+    """Coloca aquí o path do teu ficheiro de html
     A poder ser, non descargues nen lle deas a 'guardar como' para evitar problemas de formateado.
     No seu lugar, unha vez no exame escribe na barra de busca 'view-source' ao principio da query:
         view-source:https://moovi.uvigo.gal/mod/quiz/review.php...
     Dalle a Ctrl+A para seleccionalo todo, cópiao e pégao nun arquivo html no directorio no que o vaias ler.
-    En firefox está comprobado que funciona.'''
-    
-    path = 'moovi.html'
-    newfile_name = 'prueba.json'
-    data = get_moovi_data(use_file=path) 
+    En firefox está comprobado que funciona."""
+
+    path = "moovi.html"
+    newfile_name = "prueba.json"
+    data = get_moovi_data(use_file=path)
 
     # Example usage
     assert newfile_name[-5:] == ".json"
 
     q, a, c, _ = get_moovi_data(use_file=path)  # questions, answers, question type
     t = [2] * len(q)  # FIXME hardcoded for single choice questions
-    json_output = format_into_json(q, a, t, c,filepath=newfile_name)
+    json_output = format_into_json(q, a, t, c, filepath=newfile_name)
 
     # Example usage
-    join_jsons('old.json', 'new.json', filepath='joined.json')
-               
-
-                        
-        
-
+    join_jsons("old.json", "new.json", filepath="joined.json")
