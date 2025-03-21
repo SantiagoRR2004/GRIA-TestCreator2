@@ -6,11 +6,11 @@ from UTILS import questionTypes
 def examWriter(questions, fileOutName, style):
 
     with open(style, "r", encoding="utf-8") as styleFile, open(
-        "./scripts/submitFormFunction.js", "r", encoding="utf-8"
+        "UTILS/scripts/submitFormFunction.js", "r", encoding="utf-8"
     ) as submitFormFile, open(
-        "./scripts/singleChoiceFunction.js", "r", encoding="utf-8"
+        "UTILS/scripts/singleChoice.js", "r", encoding="utf-8"
     ) as singleChoiceFile, open(
-        "./scripts/multipleChoiceFunction.js", "r", encoding="utf-8"
+        "UTILS/scripts/multipleChoice.js", "r", encoding="utf-8"
     ) as multipleChoiceFile:
 
         submitFormFunction = submitFormFile.read()
