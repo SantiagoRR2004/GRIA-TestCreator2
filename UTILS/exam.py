@@ -32,11 +32,11 @@ def examGenerator(
     """
     match style:
         case "default":
-            css = "UTILS/style.css"
+            css = "UTILS/styles/style.css"
         case "legacy":
-            css = "UTILS/legacy.css"
+            css = "UTILS/styles/legacy.css"
         case "dark":
-            css = "UTILS/dark.css"
+            css = "UTILS/styles/dark.css"
         case _:
             raise ValueError(f"Unknown style: {style}")
 
