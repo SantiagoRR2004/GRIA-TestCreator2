@@ -63,7 +63,7 @@ def questionGenerator(
 
         numOfQuestionsInUnit = len(questionsData["questions"])
 
-        if questionsOfEachUnit[filePath] < numOfQuestionsInUnit:
+        if questionsOfEachUnit[filePath] <= numOfQuestionsInUnit:
             choosenQuestions = random.sample(
                 questionsData["questions"], questionsOfEachUnit[filePath]
             )  # No repeats
