@@ -70,11 +70,15 @@ def format_into_json(questions, answers, type, correct, filepath=None) -> dict:
 
     for q, a, t, c in zip(questions, answers, type, correct):
         if t == 2:
+            try:
+                correct_option = c[0] if isinstance(c, list) else c,
+            except IndexError:
+                correct_option = -1
             type = "singleChoice"
             dict_q = {
                 "question": q,
                 "options": a,
-                "correct_option": c[0] if isinstance(c, list) else c,
+                "correct_option": correct_option,
                 "questionType": type,
             }
         elif t == 4:
@@ -100,10 +104,13 @@ if __name__ == "__main__":
     No seu lugar, unha vez no exame escribe na barra de busca 'view-source' ao principio da query:
         view-source:https://moovi.uvigo.gal/mod/quiz/review.php...
     Dalle a Ctrl+A para seleccionalo todo, cópiao e pégao nun arquivo html no directorio no que o vaias ler.
-    En firefox está comprobado que funciona."""
+    En firefox está comprobado que funciona.
+    
+    Después de ejecutar, revisad el JSON. Modificad a mano los -1 que encontréis en correct_option.
+    """
 
     path = "moovi.html"
-    newfile_name = "prueba.json"
+    newfile_name = "new.json"
     data = get_moovi_data(use_file=path)
 
     # Example usage
