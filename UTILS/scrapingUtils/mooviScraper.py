@@ -5,7 +5,7 @@ import json
 
 
 def get_moovi_data(use_file=None):
-    with open(path, encoding="utf-8") as html_file:
+    with open(use_file, encoding="utf-8") as html_file:
         content = html_file.read()
         page = BeautifulSoup(content, "html.parser")
 
@@ -121,4 +121,4 @@ if __name__ == "__main__":
     json_output = format_into_json(q, a, t, c, filepath=newfile_name)
 
     # Example usage
-    join_jsons("old.json", "new.json", filepath="joined.json")
+    join_jsons("SIRE/Unit3.json", "new.json", filepath="joined.json")
