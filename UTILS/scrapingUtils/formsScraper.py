@@ -110,7 +110,7 @@ def format_into_json(questions, answers, type, filepath=None) -> dict:
 
     if filepath:
         with open(filepath, "w") as file:
-            json.dump(dict_qs, file, indent=4)
+            json.dump(dict_qs, file, indent=4, ensure_ascii=False)
 
     return dict_qs
 
@@ -136,7 +136,7 @@ if __name__ == "__main__":
     # Example usage
     url = input("Enter the url: ")
     name = input("Enter complete file name: ")
-    assert name[-5:] == ".json"
+    assert name.endswith(".json")
 
     # q, a, t = get_data(url=url, use_file='test_answers.html')
     q, a, t = get_form_data(url=url)  # questions, answers, question type
