@@ -47,9 +47,9 @@ jobs:
         run: |
           npm install --global prettier
 
-      - name: Format JSON files with Prettier
+      - name: Format all files with Prettier
         run: |
-          prettier --write "**/*.json"
+          prettier --write "**/*.{js,jsx,ts,tsx,json,json5,jsonc,css,scss,less,html,vue,astro,svelte,md,mdx,yml,yaml,graphql,gql,toml}"
 
       - name: Commit and push changes
         run: |
