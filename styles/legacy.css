@@ -1,31 +1,32 @@
-body {font-family: Arial, sans-serif; 
+body {
+  font-family: Arial, sans-serif;
 }
 .correct {
-    color: green;
+  color: green;
 }
 .incorrect {
-    color: red;
+  color: red;
 }
 .question {
-    margin-bottom: 19px;
+  margin-bottom: 19px;
 }
 .question p {
-    font-weight: bold;
-    font-size: 19px;
+  font-weight: bold;
+  font-size: 19px;
 }
 .question span {
-    font-size: 17px;
-    font-style: italic;
+  font-size: 17px;
+  font-style: italic;
 }
 .question li {
-    font-size: 18px;
-    list-style-type: none;
+  font-size: 18px;
+  list-style-type: none;
 }
 .correct-answer {
-    display: none;
-    font-weight: bold;
-    font-size: 16px;
+  display: none;
+  font-weight: bold;
+  font-size: 16px;
 }
 .answered {
-    pointer-events: none;
+  pointer-events: none;
 }
