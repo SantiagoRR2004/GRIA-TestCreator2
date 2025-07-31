@@ -63,10 +63,10 @@ function singleChoiceGenerator(question, nQuestion) {
    *
    * @returns {string} The HTML code for the question
    */
-  
+
   // First we randomize the order of the options
   const randomizedQuestion = randomizeSingleChoice(question);
-  
+
   const questionText = randomizedQuestion.question;
   const options = randomizedQuestion.options;
   const correctOption = randomizedQuestion.correct_option;
@@ -113,13 +113,16 @@ function randomizeSingleChoice(question) {
    */
   const questionCopy = JSON.parse(JSON.stringify(question)); // Deep copy
   const correct = questionCopy.options[questionCopy.correct_option];
-  
+
   // Shuffle the options array
   for (let i = questionCopy.options.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [questionCopy.options[i], questionCopy.options[j]] = [questionCopy.options[j], questionCopy.options[i]];
+    [questionCopy.options[i], questionCopy.options[j]] = [
+      questionCopy.options[j],
+      questionCopy.options[i],
+    ];
   }
-  
+
   // Update the correct option index
   questionCopy.correct_option = questionCopy.options.indexOf(correct);
   return questionCopy;

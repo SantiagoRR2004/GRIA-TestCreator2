@@ -84,10 +84,10 @@ function multipleChoiceGenerator(question, nQuestion) {
    *
    * @returns {string} The HTML code for the question
    */
-  
+
   // First we randomize the order of the options
   const randomizedQuestion = randomizeMultipleChoice(question);
-  
+
   const questionText = randomizedQuestion.question;
   const options = randomizedQuestion.options;
   const correctOptions = randomizedQuestion.correct_options;
@@ -110,7 +110,7 @@ function multipleChoiceGenerator(question, nQuestion) {
 
   // Convert correct option indices to letters and sort them
   const correctOptionsStr = correctOptions
-    .map(i => String.fromCharCode(65 + i))
+    .map((i) => String.fromCharCode(65 + i))
     .sort()
     .join(", ");
 
@@ -138,16 +138,23 @@ function randomizeMultipleChoice(question) {
    * @returns {Object} The question data with the options randomized
    */
   const questionCopy = JSON.parse(JSON.stringify(question)); // Deep copy
-  const correct = questionCopy.correct_options.map(i => questionCopy.options[i]);
-  
+  const correct = questionCopy.correct_options.map(
+    (i) => questionCopy.options[i],
+  );
+
   // Shuffle the options array
   for (let i = questionCopy.options.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [questionCopy.options[i], questionCopy.options[j]] = [questionCopy.options[j], questionCopy.options[i]];
+    [questionCopy.options[i], questionCopy.options[j]] = [
+      questionCopy.options[j],
+      questionCopy.options[i],
+    ];
   }
-  
+
   // Update the correct option indices
-  questionCopy.correct_options = correct.map(c => questionCopy.options.indexOf(c));
+  questionCopy.correct_options = correct.map((c) =>
+    questionCopy.options.indexOf(c),
+  );
   return questionCopy;
 }
 
