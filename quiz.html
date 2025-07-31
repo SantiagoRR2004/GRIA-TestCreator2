@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Exam</title>
+    <title>Examen</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles/legacy.css" />
@@ -9,11 +9,61 @@
     <script src="scripts/config.js"></script>
     <!-- Load file loader module -->
     <script src="scripts/fileLoader.js"></script>
+    <!-- Load questions registry -->
+    <script src="scripts/questions.js"></script>
+    <!-- Load question type implementations -->
+    <script src="scripts/questions/singleChoice.js"></script>
+    <script src="scripts/questions/multipleChoice.js"></script>
+    <!-- Load submit form function -->
+    <script src="scripts/submitFormFunction.js"></script>
   </head>
 
   <body>
+    <form id="testForm" onsubmit="return submitForm()">
+      <div id="questionsContainer">
+        <!-- Questions will be dynamically generated here -->
+      </div>
+      <input id="submitButton" type="submit" value="Enviar respuestas">
+    </form>
+    <p id="scoreDisplay"></p>
+
     <script>
       // Configuration is now loaded from scripts/config.js
+
+      // Function to shuffle an array
+      function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+
+      // Function to select random questions
+      function selectRandomQuestions(questions, numberOfQuestions) {
+        if (questions.length <= numberOfQuestions) {
+          return questions;
+        }
+        const shuffled = shuffleArray(questions);
+        return shuffled.slice(0, numberOfQuestions);
+      }
+
+      // Function to render questions in the DOM
+      function renderQuestions(questions) {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
+
+        questions.forEach((question, index) => {
+          try {
+            const questionHtml = window.questionRegistry.generate(question, index);
+            container.innerHTML += questionHtml;
+          } catch (error) {
+            console.error(`Error generating question ${index}:`, error);
+            container.innerHTML += `<div class="error">Error generating question ${index + 1}</div>`;
+          }
+        });
+      }
 
       // Display the configuration for verification and load questions
       document.addEventListener("DOMContentLoaded", async function () {
@@ -24,16 +74,27 @@
         // Load all questions when the page loads
         try {
           console.log("Loading all questions...");
-          const questions = await window.fileLoader.loadAllQuestions();
-          console.log(`Successfully loaded ${questions.length} questions`);
-          console.log(
-            "All questions are now available in the fileLoader module",
-          );
+          const allQuestions = await window.fileLoader.loadAllQuestions();
+          console.log(`Successfully loaded ${allQuestions.length} questions`);
+          
+          if (allQuestions.length === 0) {
+            document.getElementById('questionsContainer').innerHTML = 
+              '<div class="error">No questions could be loaded. Please check the configuration and file paths.</div>';
+            return;
+          }
 
-          // You can access the questions using: window.fileLoader.getAllQuestions()
-          console.log("Sample of loaded questions:", questions.slice(0, 3)); // Show first 3 questions as sample
+          // Select random questions based on configuration
+          const selectedQuestions = selectRandomQuestions(allQuestions, QUIZ_CONFIG.numberOfQuestions);
+          console.log(`Selected ${selectedQuestions.length} questions for the quiz`);
+
+          // Render the questions
+          renderQuestions(selectedQuestions);
+          
+          console.log("Quiz questions rendered successfully");
         } catch (error) {
           console.error("Failed to load questions:", error);
+          document.getElementById('questionsContainer').innerHTML = 
+            '<div class="error">Failed to load questions. Please check the console for more details.</div>';
         }
       });
     </script>
