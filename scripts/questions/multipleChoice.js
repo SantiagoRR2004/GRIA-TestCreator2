@@ -67,3 +67,9 @@ function multipleChoice(question) {
     return -0.5;
   }
 }
+
+
+// Register the function
+if (typeof window !== 'undefined' && window.questionRegistry) {
+    window.questionRegistry.register('multipleChoice', multipleChoice);
+}
