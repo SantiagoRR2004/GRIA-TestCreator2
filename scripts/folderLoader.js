@@ -63,14 +63,14 @@ async function loadFromGitHubPages(currentUrl) {
   const data = await response.json();
 
   // Filter for directories only
-  return data
-    .filter((item) => item.type === "dir")
-    .map((item) => item.name);
+  return data.filter((item) => item.type === "dir").map((item) => item.name);
 }
 
 async function loadFromLocalServer() {
   // Local/Normal server: Try to discover folders dynamically
-  console.log("Running on local server, attempting to discover subject folders");
+  console.log(
+    "Running on local server, attempting to discover subject folders",
+  );
 
   try {
     // Try to fetch the directory listing if the server supports it
