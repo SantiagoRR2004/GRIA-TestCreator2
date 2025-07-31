@@ -70,30 +70,29 @@
 
       // Display the configuration for verification and load questions
       document.addEventListener("DOMContentLoaded", async function () {
-
         if (window.notStandalone) {
           console.log("Running in non-standalone mode");
-        // Get the selected subject from sessionStorage
-        const selectedSubject = sessionStorage.getItem("selectedSubject");
+          // Get the selected subject from sessionStorage
+          const selectedSubject = sessionStorage.getItem("selectedSubject");
 
-        if (!selectedSubject) {
-          console.error("No subject selected in the session storage.");
-          document.getElementById("questionsContainer").innerHTML =
-            '<div class="error">No subject selected. Please go back to the main page and select a subject.</div>';
-          return;
-        }
+          if (!selectedSubject) {
+            console.error("No subject selected in the session storage.");
+            document.getElementById("questionsContainer").innerHTML =
+              '<div class="error">No subject selected. Please go back to the main page and select a subject.</div>';
+            return;
+          }
 
-        // Update the configuration with the selected subject
-        const updatedConfig = {
-          ...QUIZ_CONFIG,
-          folder: `database/${selectedSubject}`,
-        };
+          // Update the configuration with the selected subject
+          const updatedConfig = {
+            ...QUIZ_CONFIG,
+            folder: `database/${selectedSubject}`,
+          };
 
-        console.log("Using configuration:", updatedConfig);
+          console.log("Using configuration:", updatedConfig);
 
-        // Update both the global config and window config to use the selected subject
-        Object.assign(QUIZ_CONFIG, updatedConfig);
-        window.QUIZ_CONFIG = QUIZ_CONFIG;
+          // Update both the global config and window config to use the selected subject
+          Object.assign(QUIZ_CONFIG, updatedConfig);
+          window.QUIZ_CONFIG = QUIZ_CONFIG;
         }
 
         // Load all questions when the page loads
