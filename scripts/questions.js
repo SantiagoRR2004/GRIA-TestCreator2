@@ -47,10 +47,9 @@ window.questionRegistry = {
   registerSolver: registerQuestionSolver,
   getSolver: getQuestionSolver,
   process: processQuestion,
-  
+
   // Generator methods
   registerGenerator: registerQuestionGenerator,
   getGenerator: getQuestionGenerator,
   generate: generateQuestion,
-  
 };
