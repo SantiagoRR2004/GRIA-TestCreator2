@@ -47,8 +47,7 @@ function singleChoice(question) {
   }
 }
 
-
 // Register the function
-if (typeof window !== 'undefined' && window.questionRegistry) {
-    window.questionRegistry.register('singleChoice', singleChoice);
+if (typeof window !== "undefined" && window.questionRegistry) {
+  window.questionRegistry.register("singleChoice", singleChoice);
 }
