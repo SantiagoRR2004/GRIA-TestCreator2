@@ -1,3 +1,13 @@
+function getQuestionTypeFromElement(questionElement) {
+  // Get the class that isn't "question"
+  for (var className of questionElement.classList) {
+    if (className !== "question") {
+      return className;
+    }
+  }
+  return null;
+}
+
 function submitForm() {
   var form = document.getElementById("testForm");
   form.elements["submitButton"].disabled = true;
@@ -14,12 +24,7 @@ function submitForm() {
     var score = 0;
 
     // Determine question type from the class names
-    var questionType = null;
-    if (question.classList.contains("singleChoice")) {
-      questionType = "singleChoice";
-    } else if (question.classList.contains("multipleChoice")) {
-      questionType = "multipleChoice";
-    }
+    var questionType = getQuestionTypeFromElement(question);
 
     if (questionType) {
       // Use the question registry to get the appropriate solver
