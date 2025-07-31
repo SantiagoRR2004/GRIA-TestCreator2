@@ -1,2 +1,26 @@
 <!doctype html>
-<html></html>
+<html>
+
+<head>
+    <title>Exam</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles/legacy.css" />
+    <!-- Load configuration first -->
+    <script src="scripts/config.js"></script>
+</head>
+
+<body>
+    <script>
+        // Configuration is now loaded from scripts/config.js
+        
+        // Display the configuration for verification
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Using configuration:", QUIZ_CONFIG);
+            console.log("Folder:", QUIZ_CONFIG.folder);
+            console.log("Number of questions:", QUIZ_CONFIG.numberOfQuestions);
+        });
+    </script>
+</body>
+
+</html>
