@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
+import questions
+import random
 import os
 
 
@@ -8,7 +10,6 @@ class TestCreator:
     currentDirectory = os.path.dirname(os.path.abspath(__file__))
     NUMBEROFEXAMS = 1
     NUMBEROFQUESTIONS = 10
-    QUESTIONSFOLDER = currentDirectory
     QUESTIONSPERTOPIC = False
     QUESTIONSPERTOPICTEXT = ""
 
@@ -56,7 +57,7 @@ class TestCreator:
 
     def createFolderSelection(self) -> None:
         """
-        Create the folder selection entry and button to choose the questions folder.
+        Create the folder selection dropdown to choose the questions folder.
 
         Args:
             - None
@@ -64,29 +65,19 @@ class TestCreator:
         Returns:
             - None
         """
-        # Folder selection Entry and Button
-        self.folder_path_var = tk.StringVar(value=self.QUESTIONSFOLDER)
+        validFolders = list(questions.validFolders().keys())
+
+        # Folder selection Dropdown
+        if not hasattr(self, "folder_path_var"):
+            self.folder_path_var = tk.StringVar(value=random.choice(validFolders))
 
         # Label
         folderLabel = tk.Label(self.window, text="Questions folder:")
         folderLabel.grid(row=0, column=0, padx=5, pady=10, sticky="w")
 
-        # Entry
-        folderEntry = tk.Entry(
-            self.window,
-            textvariable=self.folder_path_var,
-            width=40,
-            state="readonly",
-        )
-        folderEntry.grid(row=0, column=1, padx=5, pady=10, sticky="w")
-
-        # Button
-        folderButton = tk.Button(
-            self.window,
-            text="Browse...",
-            command=lambda: self.browse_folder(self.folder_path_var),
-        )
-        folderButton.grid(row=0, column=2, padx=5, pady=10, sticky="e")
+        # Dropdown
+        folderDropdown = tk.OptionMenu(self.window, self.folder_path_var, *validFolders)
+        folderDropdown.grid(row=0, column=1, padx=5, pady=10, sticky="w")
 
     def createNumberOfExams(self) -> None:
         """

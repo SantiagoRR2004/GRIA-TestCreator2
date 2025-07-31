@@ -88,7 +88,7 @@ def questionGenerator(
     return questions
 
 
-def findPatternFiles(pattern="Unit*.json", folderPath=".") -> list:
+def findPatternFiles(pattern="*.json", folderPath=".") -> list:
     """
     Returns a list of files that match the pattern
     in the given folderPath. The files are returned
@@ -151,10 +151,14 @@ def validFolders() -> dict:
         - dict: The dictionary with the folders and the
             number of questions in each file
     """
-    filePath = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    filePath = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "database")
+    )
 
     folders = {
-        f: questionsByFileInFolder(f) for f in os.listdir(filePath) if os.path.isdir(f)
+        f: questionsByFileInFolder(os.path.join(filePath, f))
+        for f in os.listdir(filePath)
+        if os.path.isdir(os.path.join(filePath, f))
     }
 
     # We eliminate the ones with empty dictionaries (no questions)
