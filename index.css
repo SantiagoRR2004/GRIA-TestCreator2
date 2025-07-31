@@ -1,0 +1,42 @@
+body {
+  padding: clamp(10px, 2vw, 20px);
+  margin: 0;
+}
+
+.container {
+  padding: clamp(15px, 3vw, 30px);
+  margin: 0 auto;
+  position: relative;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: clamp(20px, 4vw, 30px);
+  font-size: clamp(1.5em, 4vw, 2.2em);
+}
+
+.options-area {
+  text-align: center;
+  margin: clamp(20px, 4vw, 30px) 0;
+}
+
+.subject-display {
+  padding: clamp(15px, 3vw, 25px);
+  margin: clamp(15px, 3vw, 20px) 0;
+  font-size: clamp(1em, 2vw, 1.2em);
+}
+
+.answer-input {
+  padding: clamp(10px, 2vw, 15px);
+  font-size: clamp(1em, 2vw, 1.1em);
+  border: none;
+  width: 100%;
+  max-width: clamp(250px, 50vw, 300px);
+  text-align: center;
+  margin: clamp(15px, 3vw, 20px) 0;
+  box-sizing: border-box;
+}
+
+.answer-input:focus {
+  outline: none;
+}
