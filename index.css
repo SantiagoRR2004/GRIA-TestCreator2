@@ -40,3 +40,33 @@ h1 {
 .answer-input:focus {
   outline: none;
 }
+
+.small-btn {
+  padding: clamp(5px, 1.5vw, 8px);
+  margin: clamp(10px, 2vw, 20px);
+  font-size: clamp(0.7em, 1.5vw, 0.8em);
+  cursor: pointer;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.main-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+button {
+  border: none;
+  padding: clamp(10px, 2vw, 12px) clamp(15px, 3vw, 25px);
+  margin: 0 clamp(5px, 1vw, 10px);
+  font-size: clamp(0.9em, 2vw, 1.1em);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+button:hover {
+  background: None;
+}
