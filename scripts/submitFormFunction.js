@@ -8,27 +8,30 @@ function submitForm() {
   var totalScore = 0;
 
   // Get all question divs that have a class matching a question type
-  var allQuestions = document.querySelectorAll('.question');
+  var allQuestions = document.querySelectorAll(".question");
 
   for (var question of allQuestions) {
     var score = 0;
-    
+
     // Determine question type from the class names
     var questionType = null;
-    if (question.classList.contains('singleChoice')) {
-      questionType = 'singleChoice';
-    } else if (question.classList.contains('multipleChoice')) {
-      questionType = 'multipleChoice';
+    if (question.classList.contains("singleChoice")) {
+      questionType = "singleChoice";
+    } else if (question.classList.contains("multipleChoice")) {
+      questionType = "multipleChoice";
     }
-    
+
     if (questionType) {
       // Use the question registry to get the appropriate solver
       var solver = window.questionRegistry.getSolver(questionType);
-      if (solver && typeof solver === 'function') {
+      if (solver && typeof solver === "function") {
         try {
           score = solver(question);
         } catch (error) {
-          console.error(`Error solving question of type ${questionType}:`, error);
+          console.error(
+            `Error solving question of type ${questionType}:`,
+            error,
+          );
           score = 0;
         }
       } else {
@@ -36,7 +39,7 @@ function submitForm() {
         score = 0;
       }
     }
-    
+
     // Process the score
     if (score === 1) {
       correctGlobal++;
