@@ -160,6 +160,12 @@ function randomizeMultipleChoice(question) {
 
 // Register both solver and generator functions
 if (typeof window !== "undefined" && window.questionRegistry) {
-  window.questionRegistry.registerSolver("multipleChoice", multipleChoiceSolver);
-  window.questionRegistry.registerGenerator("multipleChoice", multipleChoiceGenerator);
+  window.questionRegistry.registerSolver(
+    "multipleChoice",
+    multipleChoiceSolver,
+  );
+  window.questionRegistry.registerGenerator(
+    "multipleChoice",
+    multipleChoiceGenerator,
+  );
 }

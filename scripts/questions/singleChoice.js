@@ -131,5 +131,8 @@ function randomizeSingleChoice(question) {
 // Register both solver and generator functions
 if (typeof window !== "undefined" && window.questionRegistry) {
   window.questionRegistry.registerSolver("singleChoice", singleChoiceSolver);
-  window.questionRegistry.registerGenerator("singleChoice", singleChoiceGenerator);
+  window.questionRegistry.registerGenerator(
+    "singleChoice",
+    singleChoiceGenerator,
+  );
 }
