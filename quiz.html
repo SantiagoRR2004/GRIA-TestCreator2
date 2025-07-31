@@ -7,17 +7,33 @@
     <link rel="stylesheet" href="styles/legacy.css" />
     <!-- Load configuration first -->
     <script src="scripts/config.js"></script>
+    <!-- Load file loader module -->
+    <script src="scripts/fileLoader.js"></script>
   </head>
 
   <body>
     <script>
       // Configuration is now loaded from scripts/config.js
 
-      // Display the configuration for verification
-      document.addEventListener("DOMContentLoaded", function () {
+      // Display the configuration for verification and load questions
+      document.addEventListener("DOMContentLoaded", async function () {
         console.log("Using configuration:", QUIZ_CONFIG);
         console.log("Folder:", QUIZ_CONFIG.folder);
         console.log("Number of questions:", QUIZ_CONFIG.numberOfQuestions);
+        
+        // Load all questions when the page loads
+        try {
+          console.log("Loading all questions...");
+          const questions = await window.fileLoader.loadAllQuestions();
+          console.log(`Successfully loaded ${questions.length} questions`);
+          console.log("All questions are now available in the fileLoader module");
+          
+          // You can access the questions using: window.fileLoader.getAllQuestions()
+          console.log("Sample of loaded questions:", questions.slice(0, 3)); // Show first 3 questions as sample
+          
+        } catch (error) {
+          console.error("Failed to load questions:", error);
+        }
       });
     </script>
   </body>
