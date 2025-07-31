@@ -15,5 +15,12 @@ const QUIZ_CONFIG = {
 // Make the configuration available globally
 window.QUIZ_CONFIG = QUIZ_CONFIG;
 
+// Global boolean variable to indicate if the quiz is running in standalone mode
+window.notStandalone = true;
+/*
+Need to use this always in a conditional as window.notStandalone, it is important for re to find
+it and delete the block for the python code to work correctly.
+*/
+
 // Log configuration for debugging
 console.log("Quiz Configuration loaded:", QUIZ_CONFIG);

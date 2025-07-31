@@ -70,6 +70,9 @@
 
       // Display the configuration for verification and load questions
       document.addEventListener("DOMContentLoaded", async function () {
+
+        if (window.notStandalone) {
+          console.log("Running in non-standalone mode");
         // Get the selected subject from sessionStorage
         const selectedSubject = sessionStorage.getItem("selectedSubject");
 
@@ -91,6 +94,7 @@
         // Update both the global config and window config to use the selected subject
         Object.assign(QUIZ_CONFIG, updatedConfig);
         window.QUIZ_CONFIG = QUIZ_CONFIG;
+        }
 
         // Load all questions when the page loads
         try {
