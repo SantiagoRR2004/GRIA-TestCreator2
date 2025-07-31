@@ -128,7 +128,8 @@ function randomizeSingleChoice(question) {
   return questionCopy;
 }
 
-// Register the function
+// Register both solver and generator functions
 if (typeof window !== "undefined" && window.questionRegistry) {
-  window.questionRegistry.register("singleChoice", singleChoiceSolver);
+  window.questionRegistry.registerSolver("singleChoice", singleChoiceSolver);
+  window.questionRegistry.registerGenerator("singleChoice", singleChoiceGenerator);
 }

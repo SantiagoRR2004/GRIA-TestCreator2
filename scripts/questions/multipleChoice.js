@@ -158,7 +158,8 @@ function randomizeMultipleChoice(question) {
   return questionCopy;
 }
 
-// Register the function
+// Register both solver and generator functions
 if (typeof window !== "undefined" && window.questionRegistry) {
-  window.questionRegistry.register("multipleChoice", multipleChoiceSolver);
+  window.questionRegistry.registerSolver("multipleChoice", multipleChoiceSolver);
+  window.questionRegistry.registerGenerator("multipleChoice", multipleChoiceGenerator);
 }
