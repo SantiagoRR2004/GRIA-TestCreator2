@@ -1,93 +1,205 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox
-from UTILS import exam
+from tkinter import filedialog
+import os
 
 
-def start_exam_generation():
-    folder = folder_path.get()
-    num_exams = int(num_exams_entry.get())
-    num_questions = int(num_questions_entry.get())
-    questions_per_topic = None
+class TestCreator:
 
-    if questions_per_topic_var.get():
-        topics_input = questions_per_topic_entry.get()
-        try:
-            # Convertir entrada en diccionario {tema: cantidad}
-            questions_per_topic = {
-                k.strip(): int(v.strip())
-                for k, v in (item.split(":") for item in topics_input.split(","))
-            }
-        except ValueError:
-            messagebox.showerror(
-                "Error",
-                "Formato incorrecto en 'Questions per topic'. Usa 'tema1:cantidad1, tema2:cantidad2'.",
+    currentDirectory = os.path.dirname(os.path.abspath(__file__))
+    NUMBEROFEXAMS = 1
+    NUMBEROFQUESTIONS = 10
+    QUESTIONSFOLDER = currentDirectory
+    QUESTIONSPERTOPIC = False
+    QUESTIONSPERTOPICTEXT = ""
+
+    def __init__(self) -> None:
+        self.createWindow()
+        self.window.mainloop()
+
+    def reset(self):
+        self.numOfExams = self.NUMBEROFEXAMS
+        self.numOfQuestions = self.NUMBEROFQUESTIONS
+        self.questionsPerTopic = self.QUESTIONSPERTOPIC
+        self.questionsPerTopicText = self.QUESTIONSPERTOPICTEXT
+        for widget in self.window.winfo_children():
+            widget.destroy()
+        self.createWidgets()
+
+    def createWindow(self):
+        self.window = tk.Tk()
+        self.window.title("Test Creator")
+        self.window.geometry("800x600")
+        self.reset()
+
+    def createWidgets(self):
+        self.createFolderSelection()
+        self.createNumberOfExams()
+        self.createNumberOfQuestions()
+        self.createQuestionsPerTopicButton()
+        self.createQuestionsPerTopicEntry()
+        self.createTestButton()
+        self.createResetButton()
+
+    def browse_folder(self, pathToSet: tk.StringVar) -> None:
+        """
+        Necessary function to get the Browse button working.
+
+        Args:
+            - pathToSet: A StringVar to set the folder path.
+
+        Returns:
+            - None
+        """
+        folder_path = filedialog.askdirectory(title="Select a folder")
+        if folder_path:
+            pathToSet.set(folder_path)
+
+    def createFolderSelection(self) -> None:
+        """
+        Create the folder selection entry and button to choose the questions folder.
+
+        Args:
+            - None
+
+        Returns:
+            - None
+        """
+        # Folder selection Entry and Button
+        self.folder_path_var = tk.StringVar(value=self.QUESTIONSFOLDER)
+
+        # Label
+        folderLabel = tk.Label(self.window, text="Questions folder:")
+        folderLabel.grid(row=0, column=0, padx=5, pady=10, sticky="w")
+
+        # Entry
+        folderEntry = tk.Entry(
+            self.window,
+            textvariable=self.folder_path_var,
+            width=40,
+            state="readonly",
+        )
+        folderEntry.grid(row=0, column=1, padx=5, pady=10, sticky="w")
+
+        # Button
+        folderButton = tk.Button(
+            self.window,
+            text="Browse...",
+            command=lambda: self.browse_folder(self.folder_path_var),
+        )
+        folderButton.grid(row=0, column=2, padx=5, pady=10, sticky="e")
+
+    def createNumberOfExams(self) -> None:
+        """
+        Create a spinbox to select the number of exams to create.
+        """
+        label = tk.Label(self.window, text="Number of exams:")
+        label.grid(row=1, column=0, padx=5, pady=10, sticky="w")
+        self.spinboxNExams = tk.Spinbox(
+            self.window,
+            from_=1,
+            to=float("inf"),
+            width=5,
+            textvariable=tk.IntVar(value=self.numOfExams),
+        )
+        self.spinboxNExams.grid(row=1, column=1, padx=5, pady=10, sticky="w")
+
+    def createNumberOfQuestions(self) -> None:
+        """
+        Create a spinbox to select the number of questions for the test.
+        """
+        label = tk.Label(self.window, text="Number of questions:")
+        label.grid(row=2, column=0, padx=5, pady=10, sticky="w")
+        self.spinboxNQuestions = tk.Spinbox(
+            self.window,
+            from_=1,
+            to=float("inf"),
+            width=5,
+            textvariable=tk.IntVar(value=self.numOfQuestions),
+        )
+        self.spinboxNQuestions.grid(row=2, column=1, padx=5, pady=10, sticky="w")
+
+    def createQuestionsPerTopicButton(self) -> None:
+        """
+        Create a checkbox to select whether to use questions per topic or not.
+
+        Args:
+            - None
+
+        Returns:
+            - None
+        """
+        self.questionsPerTopicVar = tk.BooleanVar(value=self.questionsPerTopic)
+
+        boolean_checkbox = tk.Checkbutton(
+            self.window,
+            text="Use questions per topic",
+            command=self.updateQuestionsPerTopicEntry,
+            variable=self.questionsPerTopicVar,
+        )
+        boolean_checkbox.grid(row=3, column=0, padx=5, pady=10, sticky="w")
+
+    def createQuestionsPerTopicEntry(self) -> None:
+        """
+        Create the entry field for questions per topic configuration.
+
+        Args:
+            - None
+
+        Returns:
+            - None
+        """
+        # Entry for questions per topic
+        self.questions_per_topic_text_var = tk.StringVar(
+            value=self.questionsPerTopicText
+        )
+
+        # Label
+        entryLabel = tk.Label(self.window, text="Questions per topic:")
+        entryLabel.grid(row=4, column=0, padx=5, pady=10, sticky="w")
+
+        # Entry
+        self.questionsPerTopicEntry = tk.Entry(
+            self.window,
+            textvariable=self.questions_per_topic_text_var,
+            width=40,
+            state="disabled",
+        )
+        self.questionsPerTopicEntry.grid(row=4, column=1, padx=5, pady=10, sticky="w")
+
+        self.updateQuestionsPerTopicEntry()
+
+    def updateQuestionsPerTopicEntry(self) -> None:
+        """
+        Update the state of the questions per topic entry based on the checkbox.
+
+        Args:
+            - None
+
+        Returns:
+            - None
+        """
+        if self.questionsPerTopicVar.get():
+            self.questionsPerTopicEntry.config(state="normal")
+            self.questionsPerTopicEntry.config(
+                textvariable=self.questions_per_topic_text_var
             )
-            return
+        else:
+            self.questionsPerTopicEntry.config(state="disabled")
+            self.questionsPerTopicEntry.config(textvariable=tk.StringVar(value=""))
 
-    if folder and num_exams > 0 and num_questions > 0:
-        try:
-            exam.examGenerator(folder, num_exams, num_questions, questions_per_topic)
-            status_label.config(text="Examen generado exitosamente.")
-        except KeyError as e:
-            messagebox.showerror(
-                "Error",
-                f"El tema '{e.args[0]}' no coincide con ningún archivo en la carpeta.",
-            )
-        except Exception as e:
-            messagebox.showerror("Error inesperado", str(e))
-    else:
-        status_label.config(text="Por favor, ingrese valores válidos.")
+    def createTestButton(self):
+        """
+        Create the button to generate tests.
+        """
+        # TODO: Implement test generation functionality
+        pass
 
-
-def select_folder():
-    path = filedialog.askdirectory()
-    folder_path.set(path)
+    def createResetButton(self):
+        button = tk.Button(self.window, text="Reset", command=self.reset)
+        button.place(
+            relx=0.0, rely=1.0, anchor="sw", x=10, y=-10
+        )  # Bottom-left with padding
 
 
-def toggle_questions_per_topic():
-    """Habilita o deshabilita el campo de 'Questions per topic' según el checkbox."""
-    state = tk.NORMAL if questions_per_topic_var.get() else tk.DISABLED
-    questions_per_topic_entry.config(state=state)
-
-
-# Configuración de la ventana
-root = tk.Tk()
-root.title("Generador de Exámenes")
-
-folder_path = tk.StringVar()
-
-tk.Label(root, text="Seleccione la carpeta de preguntas:").pack()
-tk.Entry(root, textvariable=folder_path, width=50).pack()
-tk.Button(root, text="Buscar", command=select_folder).pack()
-
-tk.Label(root, text="Número de exámenes:").pack()
-num_exams_entry = tk.Entry(root)
-num_exams_entry.pack()
-num_exams_entry.insert(0, "1")
-
-tk.Label(root, text="Número de preguntas por examen:").pack()
-num_questions_entry = tk.Entry(root)
-num_questions_entry.pack()
-num_questions_entry.insert(0, "10")
-
-# Checkbox para activar "Questions per topic"
-questions_per_topic_var = tk.BooleanVar()
-questions_per_topic_checkbox = tk.Checkbutton(
-    root,
-    text="Usar 'Questions per topic'",
-    variable=questions_per_topic_var,
-    command=toggle_questions_per_topic,
-)
-questions_per_topic_checkbox.pack()
-
-# Campo de entrada para "Questions per topic"
-questions_per_topic_entry = tk.Entry(root, state=tk.DISABLED, width=50)
-questions_per_topic_entry.pack()
-questions_per_topic_entry.insert(0, "tema1:3, tema2:5")
-
-tk.Button(root, text="Generar Examen", command=start_exam_generation).pack()
-
-status_label = tk.Label(root, text="")
-status_label.pack()
-
-root.mainloop()
+if __name__ == "__main__":
+    TestCreator()
