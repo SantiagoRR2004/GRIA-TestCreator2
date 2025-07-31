@@ -1,4 +1,4 @@
-function multipleChoice(question) {
+function multipleChoiceSolver(question) {
   var selectedInputs = question.querySelectorAll("input:checked");
 
   // Get the correct answer element
@@ -68,7 +68,90 @@ function multipleChoice(question) {
   }
 }
 
+function multipleChoiceGenerator(question, nQuestion) {
+  /**
+   * Generate the HTML for a multiple choice question
+   *
+   * @param {Object} question - The question data. It requires the following keys:
+   *   - question (string): The question text
+   *   - options (array): A list with the possible answers
+   *   - correct_options (array): A list with the indexes of the correct answers
+   *   - questionType (string): The type of question
+   *   It also can have the following optional keys:
+   *   - folder (string): The folder where the images are located
+   *   - images (array): A list with the names of the images
+   * @param {number} nQuestion - The question number. It needs to be in base 0
+   *
+   * @returns {string} The HTML code for the question
+   */
+  
+  // First we randomize the order of the options
+  const randomizedQuestion = randomizeMultipleChoice(question);
+  
+  const questionText = randomizedQuestion.question;
+  const options = randomizedQuestion.options;
+  const correctOptions = randomizedQuestion.correct_options;
+  let optionHtml = "";
+
+  // Generate the HTML for the options
+  for (let j = 0; j < options.length; j++) {
+    const optionLetter = String.fromCharCode(65 + j); // Convert index to letter (A, B, C, ...)
+    optionHtml += `<li><input type="checkbox" name="question_${nQuestion}" value="${optionLetter}"> ${optionLetter}) ${options[j]}</li>`;
+  }
+
+  // Add the images to the question
+  let images = "";
+  if (randomizedQuestion.images && randomizedQuestion.images.length > 0) {
+    for (const img of randomizedQuestion.images) {
+      const location = `${randomizedQuestion.folder}/${img}`;
+      images += `<img src="${location}" alt="imagen">`;
+    }
+  }
+
+  // Convert correct option indices to letters and sort them
+  const correctOptionsStr = correctOptions
+    .map(i => String.fromCharCode(65 + i))
+    .sort()
+    .join(", ");
+
+  const correctHtml = `<p class="correct-answer">Respuestas correctas: ${correctOptionsStr}</p>`;
+  const correctHiddenInput = `<input type="hidden" name="correct_${nQuestion}" value="${correctOptionsStr}">`;
+
+  return `
+            <div class="${randomizedQuestion.questionType} question">
+                <p>${nQuestion + 1}: ${questionText}</p>  <!-- Mostrar el número de pregunta -->
+                ${images}
+                <ul>
+                    ${optionHtml}
+                </ul>
+                ${correctHtml}
+                ${correctHiddenInput}
+            </div>
+            `;
+}
+
+function randomizeMultipleChoice(question) {
+  /**
+   * Randomize the order of the options in a multiple choice question
+   *
+   * @param {Object} question - The question data
+   * @returns {Object} The question data with the options randomized
+   */
+  const questionCopy = JSON.parse(JSON.stringify(question)); // Deep copy
+  const correct = questionCopy.correct_options.map(i => questionCopy.options[i]);
+  
+  // Shuffle the options array
+  for (let i = questionCopy.options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questionCopy.options[i], questionCopy.options[j]] = [questionCopy.options[j], questionCopy.options[i]];
+  }
+  
+  // Update the correct option indices
+  questionCopy.correct_options = correct.map(c => questionCopy.options.indexOf(c));
+  return questionCopy;
+}
+
 // Register the function
 if (typeof window !== "undefined" && window.questionRegistry) {
-  window.questionRegistry.register("multipleChoice", multipleChoice);
+  window.questionRegistry.register("multipleChoice", multipleChoiceSolver);
 }
