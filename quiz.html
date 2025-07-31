@@ -20,17 +20,18 @@
         console.log("Using configuration:", QUIZ_CONFIG);
         console.log("Folder:", QUIZ_CONFIG.folder);
         console.log("Number of questions:", QUIZ_CONFIG.numberOfQuestions);
-        
+
         // Load all questions when the page loads
         try {
           console.log("Loading all questions...");
           const questions = await window.fileLoader.loadAllQuestions();
           console.log(`Successfully loaded ${questions.length} questions`);
-          console.log("All questions are now available in the fileLoader module");
-          
+          console.log(
+            "All questions are now available in the fileLoader module",
+          );
+
           // You can access the questions using: window.fileLoader.getAllQuestions()
           console.log("Sample of loaded questions:", questions.slice(0, 3)); // Show first 3 questions as sample
-          
         } catch (error) {
           console.error("Failed to load questions:", error);
         }
