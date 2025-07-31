@@ -15,24 +15,17 @@
         <div class="subject-display">
           <label for="subject-select">Choose a subject:</label>
           <select id="subject-select" class="answer-input">
-            <option value="">Select a subject...</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
+            <option value="">Loading subjects...</option>
           </select>
         </div>
       </div>
     </div>
 
+    <script src="scripts/folderLoader.js"></script>
+    <script src="scripts/indexPage.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const subjectSelect = document.getElementById("subject-select");
+        initializeIndexPage();
       });
     </script>
   </body>
