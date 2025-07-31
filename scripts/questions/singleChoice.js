@@ -46,3 +46,9 @@ function singleChoice(question) {
     return -1 / (numOptions - 1);
   }
 }
+
+
+// Register the function
+if (typeof window !== 'undefined' && window.questionRegistry) {
+    window.questionRegistry.register('singleChoice', singleChoice);
+}
