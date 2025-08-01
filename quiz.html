@@ -4,7 +4,7 @@
     <title>Examen</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style id="dynamic-style"></style>
+    <link rel="stylesheet" id="dynamic-style" />
     <!-- Load configuration first -->
     <script src="scripts/config.js"></script>
     <!-- Load file loader module -->
@@ -70,12 +70,21 @@
 
       // Display the configuration for verification and load questions
       document.addEventListener("DOMContentLoaded", async function () {
+
+
         if (window.notStandalone) {
           // Set the dynamic style based on configuration
-          document.getElementById("dynamic-style").innerHTML = `
-            @import url('${sessionStorage.getItem("style")}');
-          `;
-        }
+          const stylePath = sessionStorage.getItem("style");
+
+          if (!stylePath) {
+            console.error("No style path found in session storage.");
+            document.getElementById("dynamic-style").href = "styles/default.css";
+            document.getElementById("questionsContainer").innerHTML =
+              '<div class="error">No style selected. Please go back to the main page and select a style.</div>';
+          }
+
+          document.getElementById("dynamic-style").href = stylePath;
+          }        
 
         if (window.notStandalone) {
           const selectedSubject = sessionStorage.getItem("selectedSubject");

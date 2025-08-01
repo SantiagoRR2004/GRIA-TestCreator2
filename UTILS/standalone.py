@@ -68,9 +68,9 @@ def makeStandalone(exam: str, style: str, replaceables: dict) -> str:
         embedded_script = f"<script>\n{script_content}\n</script>"
         exam = exam.replace(f'<script src="{script}"></script>', embedded_script)
 
-    # Replace the <style id="dynamic-style"></style>
+    # Replace the <link rel="stylesheet" id="dynamic-style" />
     style_pattern = re.compile(
-        r'<style\s+id="dynamic-style"\s*></style>', re.IGNORECASE
+        r'<link\s+rel="stylesheet"\s+id="dynamic-style"\s*/>', re.IGNORECASE
     )
     if style_pattern.search(exam):
         # Replace the style tag with the provided style
