@@ -96,7 +96,7 @@
           // Select random questions based on configuration
           const selectedQuestions = selectRandomQuestions(
             allQuestions,
-            QUIZ_CONFIG.numberOfQuestions,
+            sessionStorage.getItem("nQuestions"),
           );
           console.log(
             `Selected ${selectedQuestions.length} questions for the quiz`,

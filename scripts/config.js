@@ -3,21 +3,21 @@
 
 // The folder containing the questions (relative to the project root)
 folder = "None";
+numberOfQuestions = 10;
 
 if (!sessionStorage.getItem("selectedSubject")) {
   sessionStorage.setItem("selectedSubject", folder);
 }
 
-const QUIZ_CONFIG = {
-  // Number of questions to include in the quiz
-  numberOfQuestions: 10,
+if (!sessionStorage.getItem("nQuestions")) {
+  sessionStorage.setItem("nQuestions", numberOfQuestions);
+}
 
+const QUIZ_CONFIG = {
   // Additional configuration options for future use
   style: "legacy", // Can be "default", "legacy", or "dark"
 };
 
-// Make the configuration available globally
-window.QUIZ_CONFIG = QUIZ_CONFIG;
 
 // Global boolean variable to indicate if the quiz is running in standalone mode
 window.notStandalone = true;
@@ -26,5 +26,3 @@ Need to use this always in a conditional as window.notStandalone, it is importan
 it and delete the block for the python code to work correctly.
 */
 
-// Log configuration for debugging
-console.log("Quiz Configuration loaded:", QUIZ_CONFIG);
