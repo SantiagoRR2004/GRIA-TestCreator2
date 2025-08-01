@@ -6,6 +6,7 @@ body {
 .container {
   padding: clamp(15px, 3vw, 30px);
   margin: 0 auto;
+  text-align: center;
   position: relative;
 }
 
@@ -18,16 +19,15 @@ h1 {
 .options-area {
   text-align: center;
   margin: clamp(20px, 4vw, 30px) 0;
+  padding: clamp(25px, 5vw, 40px);
 }
 
-.subject-display {
-  padding: clamp(15px, 3vw, 25px);
-  margin: clamp(15px, 3vw, 20px) 0;
+.option-display {
   font-size: clamp(1em, 2vw, 1.2em);
 }
 
 .answer-input {
-  padding: clamp(10px, 2vw, 15px);
+  padding: clamp(5px, 1vw, 8px);
   font-size: clamp(1em, 2vw, 1.1em);
   border: none;
   width: 100%;
