@@ -57,11 +57,13 @@ async function loadAvailableStyles() {
     const links = Array.from(doc.querySelectorAll("a"));
     const styleFiles = links
       .map((a) => a.getAttribute("href"))
-      .filter((href) => href && href.match(/\.css$/));
+      .filter((href) => href && href.match(/\.css$/))
+      .map((href) => `styles/${href}`);
 
     styleSelect.innerHTML = "";
     styleFiles.forEach((file) => {
-      const styleName = file.replace(/\.css$/, "");
+      // Extract only the filename (after the last slash) and remove .css
+      const styleName = file.split("/").pop().replace(/\.css$/, "");
       const option = document.createElement("option");
       option.value = file;
       option.textContent = styleName;
