@@ -4,6 +4,7 @@
 // The folder containing the questions (relative to the project root)
 folder = "None";
 numberOfQuestions = 10;
+questionList = [];
 
 if (!sessionStorage.getItem("selectedSubject")) {
   sessionStorage.setItem("selectedSubject", folder);
@@ -11,6 +12,10 @@ if (!sessionStorage.getItem("selectedSubject")) {
 
 if (!sessionStorage.getItem("nQuestions")) {
   sessionStorage.setItem("nQuestions", numberOfQuestions);
+}
+
+if (!sessionStorage.getItem("allQuestions")) {
+  sessionStorage.setItem("allQuestions", JSON.stringify(questionList));
 }
 
 const QUIZ_CONFIG = {
