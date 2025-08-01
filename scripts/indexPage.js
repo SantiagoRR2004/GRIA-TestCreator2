@@ -56,11 +56,11 @@ async function loadAvailableStyles() {
     const doc = parser.parseFromString(text, "text/html");
     const links = Array.from(doc.querySelectorAll("a"));
     const styleFiles = links
-      .map(a => a.getAttribute("href"))
-      .filter(href => href && href.match(/\.css$/));
+      .map((a) => a.getAttribute("href"))
+      .filter((href) => href && href.match(/\.css$/));
 
-    styleSelect.innerHTML = '';
-    styleFiles.forEach(file => {
+    styleSelect.innerHTML = "";
+    styleFiles.forEach((file) => {
       const styleName = file.replace(/\.css$/, "");
       const option = document.createElement("option");
       option.value = file;
@@ -74,7 +74,8 @@ async function loadAvailableStyles() {
       styleSelect.value = storedStyle;
     } else if (styleFiles.length > 0) {
       // Choose a random style if none is selected
-      const randomStyle = styleFiles[Math.floor(Math.random() * styleFiles.length)];
+      const randomStyle =
+        styleFiles[Math.floor(Math.random() * styleFiles.length)];
       styleSelect.value = randomStyle;
       sessionStorage.setItem("style", randomStyle);
       console.log("Random style selected:", randomStyle);
