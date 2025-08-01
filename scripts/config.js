@@ -1,14 +1,8 @@
 // Quiz Configuration
-// This file contains the hardcoded settings for the quiz
+// This file is made to make the standalone quiz work
 
-// The folder containing the questions (relative to the project root)
-folder = "None";
 numberOfQuestions = 10;
 questionList = [];
-
-if (!sessionStorage.getItem("selectedSubject")) {
-  sessionStorage.setItem("selectedSubject", folder);
-}
 
 if (!sessionStorage.getItem("nQuestions")) {
   sessionStorage.setItem("nQuestions", numberOfQuestions);
