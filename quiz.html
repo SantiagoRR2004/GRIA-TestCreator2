@@ -7,8 +7,6 @@
     <link rel="stylesheet" id="dynamic-style" />
     <!-- Load configuration first -->
     <script src="scripts/config.js"></script>
-    <!-- Load file loader module -->
-    <script src="scripts/fileLoader.js"></script>
     <!-- Load questions registry -->
     <script src="scripts/questions.js"></script>
     <!-- Load question type implementations -->
@@ -70,14 +68,39 @@
 
       // Display the configuration for verification and load questions
       document.addEventListener("DOMContentLoaded", async function () {
+        // Load notStandalone script files
+        if (window.notStandalone) {
+          const scripts = [
+            "scripts/fileLoader.js",
+          ];
+
+          const loadScript = (src) => {
+            return new Promise((resolve, reject) => {
+              const scriptElement = document.createElement("script");
+              scriptElement.src = src;
+              scriptElement.onload = () => resolve(src);
+              scriptElement.onerror = () => reject(new Error(`Failed to load ${src}`));
+              document.head.appendChild(scriptElement);
+            });
+          };
+
+          await Promise.all(scripts.map(loadScript))
+            .then((loadedScripts) => {
+              console.log("All scripts loaded:", loadedScripts);
+              // I can't put the code in here
+            })
+            .catch((error) => {
+              console.error("Script loading error:", error);
+            });
+        }
+
+
         if (window.notStandalone) {
           // Set the dynamic style based on configuration
           const stylePath = sessionStorage.getItem("style");
 
           if (!stylePath) {
             console.error("No style path found in session storage.");
-            document.getElementById("dynamic-style").href =
-              "styles/default.css";
             document.getElementById("questionsContainer").innerHTML =
               '<div class="error">No style selected. Please go back to the main page and select a style.</div>';
           }
