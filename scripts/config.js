@@ -1,10 +1,8 @@
 // Quiz Configuration
 // This file contains the hardcoded settings for the quiz
 
-
 // The folder containing the questions (relative to the project root)
-folder = "None"
-
+folder = "None";
 
 if (!sessionStorage.getItem("selectedSubject")) {
   sessionStorage.setItem("selectedSubject", folder);
