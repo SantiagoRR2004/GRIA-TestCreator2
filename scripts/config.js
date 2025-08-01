@@ -1,10 +1,16 @@
 // Quiz Configuration
 // This file contains the hardcoded settings for the quiz
 
-const QUIZ_CONFIG = {
-  // The folder containing the questions (relative to the project root)
-  folder: "database/PIC",
 
+// The folder containing the questions (relative to the project root)
+folder = "None"
+
+
+if (!sessionStorage.getItem("selectedSubject")) {
+  sessionStorage.setItem("selectedSubject", folder);
+}
+
+const QUIZ_CONFIG = {
   // Number of questions to include in the quiz
   numberOfQuestions: 10,
 

@@ -11,7 +11,7 @@ let allQuestions = [];
  */
 async function getQuestionFiles() {
   try {
-    const folderPath = QUIZ_CONFIG.folder;
+    const folderPath = "database/" + sessionStorage.getItem("selectedSubject");
     console.log(`Loading files from folder: ${folderPath}`);
 
     // Try to fetch the directory listing
