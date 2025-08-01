@@ -63,7 +63,10 @@ async function loadAvailableStyles() {
     styleSelect.innerHTML = "";
     styleFiles.forEach((file) => {
       // Extract only the filename (after the last slash) and remove .css
-      const styleName = file.split("/").pop().replace(/\.css$/, "");
+      const styleName = file
+        .split("/")
+        .pop()
+        .replace(/\.css$/, "");
       const option = document.createElement("option");
       option.value = file;
       option.textContent = styleName;
