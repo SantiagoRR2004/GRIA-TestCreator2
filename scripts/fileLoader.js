@@ -29,10 +29,7 @@ async function getQuestionFiles() {
         });
 
         sessionStorage.setItem("allQuestionFiles", JSON.stringify(jsonFiles));
-        console.log(
-          `Found ${jsonFiles.length} JSON files:`,
-          jsonFiles,
-        );
+        console.log(`Found ${jsonFiles.length} JSON files:`, jsonFiles);
       }
     } catch (error) {
       console.log(
@@ -75,7 +72,9 @@ async function loadAllQuestions() {
 
     // First get all question files
     await getQuestionFiles();
-    const questionFiles = JSON.parse(sessionStorage.getItem("allQuestionFiles"));
+    const questionFiles = JSON.parse(
+      sessionStorage.getItem("allQuestionFiles"),
+    );
 
     if (!questionFiles || questionFiles.length === 0) {
       console.warn("No question files found");
