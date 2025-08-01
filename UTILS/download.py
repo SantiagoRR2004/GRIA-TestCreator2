@@ -1,5 +1,44 @@
 import os
 import requests
+import datetime
+
+
+def checkUpdates(folderPath: str, owner: str, repo: str) -> bool:
+    """
+    Check if the local folder is up to date with the remote repository.
+
+    Args:
+        - folderPath (str): The path to the local folder containing the questions.
+        - owner (str): GitHub repository owner
+        - repo (str): Repository name
+
+    Returns:
+        - bool: True if the local folder is up to date,
+            or an error occurred,
+            False if it does not exist or is outdated.
+    """
+    if not os.path.exists(folderPath):
+        return False
+
+    folderTime = datetime.datetime.fromtimestamp(
+        os.path.getmtime(folderPath), tz=datetime.timezone.utc
+    )
+
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page=1"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        latestCommit = response.json()[0]
+        latestCommitTime = datetime.datetime.fromisoformat(
+            latestCommit["commit"]["committer"]["date"]
+        )
+
+        return folderTime >= latestCommitTime
+
+    except Exception as e:
+        print(f"Error checking updates: {e}")
+        return True
 
 
 def downloadFile(url: str, localPath: str) -> bool:
@@ -56,7 +95,7 @@ def downloadRepository(
     owner: str = "SantiagoRR2004",
     repo: str = "GRIA-TestCreator",
     databaseFolder: str = "database",
-):
+) -> float:
     """
     Download all question files from the GRIA-TestCreator repository.
 
@@ -64,7 +103,14 @@ def downloadRepository(
         - owner (str): GitHub repository owner
         - repo (str): Repository name
         - databaseFolder (str): Local folder to store downloaded questions
+
+    Returns:
+        - float: The success rate of downloaded files (0 to 1)
     """
+    if checkUpdates(databaseFolder, owner, repo):
+        print("The local database is up to date.")
+        return 1
+
     baseUrl = f"https://raw.githubusercontent.com/{owner}/{repo}/main"
 
     # Create database folder if it doesn't exist
