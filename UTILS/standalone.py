@@ -70,16 +70,16 @@ def makeStandalone(exam: str, replaceables: dict) -> str:
     # Now replace the parameters
     for key, value in replaceables.items():
         # General pattern to match both quoted and unquoted values
-        general_pattern = re.compile(rf'{key}:\s*("?)([^",\s}}]+)\1')
+        general_pattern = re.compile(rf'{key}\s*=\s*("?)([^",\s}}]+)\1')
         match = general_pattern.search(exam)
 
         if match:
             hasQuotes = bool(match.group(1))  # Check if quotes were found
             if hasQuotes:
                 # Replace with quotes
-                exam = general_pattern.sub(f'{key}: "{value}"', exam)
+                exam = general_pattern.sub(f'{key} = "{value}"', exam)
             else:
                 # Replace without quotes
-                exam = general_pattern.sub(f"{key}: {value}", exam)
+                exam = general_pattern.sub(f"{key} = {value}", exam)
 
     return exam
