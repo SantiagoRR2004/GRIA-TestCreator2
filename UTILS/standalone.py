@@ -40,13 +40,14 @@ def removeStandaloneBlocks(text: str) -> str:
     return "".join(result)
 
 
-def makeStandalone(exam: str, replaceables: dict) -> str:
+def makeStandalone(exam: str, style: str, replaceables: dict) -> str:
     """
     Converts an exam HTML string to a standalone version by embedding scripts
     and replacing parameters with provided values.
 
     Args:
         - exam (str): The HTML content of the exam.
+        - style (str): The raw style text to be embedded in the HTML.
         - replaceables (dict): A dictionary containing keys with the variable name
             and values to replace in the HTML content.
 
@@ -66,6 +67,14 @@ def makeStandalone(exam: str, replaceables: dict) -> str:
             script_content = f.read()
         embedded_script = f"<script>\n{script_content}\n</script>"
         exam = exam.replace(f'<script src="{script}"></script>', embedded_script)
+
+    # Replace the <style id="dynamic-style"></style>
+    style_pattern = re.compile(
+        r'<style\s+id="dynamic-style"\s*></style>', re.IGNORECASE
+    )
+    if style_pattern.search(exam):
+        # Replace the style tag with the provided style
+        exam = style_pattern.sub(f"<style>{style}</style>", exam)
 
     # Now replace the parameters
     for key, value in replaceables.items():

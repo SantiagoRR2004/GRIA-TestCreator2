@@ -8,7 +8,7 @@ def examGenerator(
     numberOfExams: int = 1,
     numberOfQuestions: str = 30,
     questionsPerTopic: dict = None,
-    style: str = "default",
+    style: str = "styles/legacy.css",
 ) -> None:
     """
     Generates exams based on the number of exams, number of questions and the folder path
@@ -22,13 +22,16 @@ def examGenerator(
         - questionsPerTopic: A dictionary with the number of questions
           per topic to generate. The keys must be absolute paths to the files
           with the questions
-        - style: The style of the exam. It can be "default" or "legacy".
+        - style (str): The path to the style file to be used in the exam
 
     Returns:
         - None
     """
     with open("quiz.html", "r", encoding="utf-8") as f:
         examContent = f.read()
+
+    with open(style, "r", encoding="utf-8") as f:
+        styleContent = f.read()
 
     for exam in range(numberOfExams):
         validQuestions = questions.questionGenerator(
@@ -39,6 +42,7 @@ def examGenerator(
             f.write(
                 standalone.makeStandalone(
                     examContent,
+                    styleContent,
                     {
                         "numberOfQuestions": numberOfQuestions,
                         "questionList": validQuestions,
