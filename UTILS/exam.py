@@ -1,9 +1,6 @@
-from random import shuffle
+from UTILS import standalone
+from UTILS import questions
 import webbrowser
-
-
-from UTILS import HTMLUtils
-from UTILS import questions as qUtils
 
 
 def examGenerator(
@@ -30,24 +27,25 @@ def examGenerator(
     Returns:
         - None
     """
-    match style:
-        case "default":
-            css = "UTILS/styles/style.css"
-        case "legacy":
-            css = "UTILS/styles/legacy.css"
-        case "dark":
-            css = "UTILS/styles/dark.css"
-        case _:
-            raise ValueError(f"Unknown style: {style}")
+    with open("quiz.html", "r", encoding="utf-8") as f:
+        examContent = f.read()
 
     for exam in range(numberOfExams):
-        questions = qUtils.questionGenerator(
+        validQuestions = questions.questionGenerator(
             folderPath, numberOfQuestions, questionsPerTopic
         )
-        # Randomize the order of the questions
-        shuffle(questions)
-        HTMLUtils.examWriter(questions, "./ExamenTest" + str(exam + 1) + ".html", css)
+
+        with open(f"ExamenTest{exam + 1}.html", "w", encoding="utf-8") as f:
+            f.write(
+                standalone.makeStandalone(
+                    examContent,
+                    {
+                        "numberOfQuestions": numberOfQuestions,
+                        "questionList": validQuestions,
+                    },
+                )
+            )
 
     # If the number of exams is 1, we open the exam in the browser
     if numberOfExams == 1:
-        webbrowser.open("./ExamenTest" + str(exam + 1) + ".html")
+        webbrowser.open(f"./ExamenTest{exam + 1}.html")
