@@ -12,17 +12,23 @@
       <h1>GRIA TEST CREATOR</h1>
 
       <div class="options-area">
-        <div class="subject-display">
+        <div class="option-display">
           <label for="subject-select">Choose a subject:</label>
           <select id="subject-select" class="answer-input">
             <option value="">Loading subjects...</option>
           </select>
         </div>
 
+        <div class="option-display">
+          <label for="question-count">Number of questions:</label>
+          <input type="number" id="question-count" class="answer-input" min="1" value="10" />
+        </div>
+
+      </div>
         <div class="buttons">
           <button id="start-test-btn" class="action-btn">Start Test</button>
         </div>
-      </div>
+
     </div>
 
     <script src="scripts/folderLoader.js"></script>
