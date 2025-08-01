@@ -1,13 +1,8 @@
 // File Loader Module
 // Functions to load and manage question files
 
-// Global variables to store loaded data
-let allQuestionFiles = [];
-let allQuestions = [];
-
 /**
- * Gets the list of all JSON files in the configured folder
- * @returns {Promise<Array>} Array of file paths
+ * Sets the list of all JSON files in the configured folder
  */
 async function getQuestionFiles() {
   try {
@@ -33,12 +28,11 @@ async function getQuestionFiles() {
           }
         });
 
-        allQuestionFiles = jsonFiles;
+        sessionStorage.setItem("allQuestionFiles", JSON.stringify(jsonFiles));
         console.log(
-          `Found ${allQuestionFiles.length} JSON files:`,
-          allQuestionFiles,
+          `Found ${jsonFiles.length} JSON files:`,
+          jsonFiles,
         );
-        return allQuestionFiles;
       }
     } catch (error) {
       console.log(
@@ -57,8 +51,6 @@ async function getQuestionFiles() {
  */
 async function loadQuestionsFromFile(filePath) {
   try {
-    console.log(`Loading questions from: ${filePath}`);
-
     const response = await fetch(filePath);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -67,7 +59,6 @@ async function loadQuestionsFromFile(filePath) {
     const data = await response.json();
     const questions = data.questions || [];
 
-    console.log(`Loaded ${questions.length} questions from ${filePath}`);
     return questions;
   } catch (error) {
     console.error(`Error loading questions from ${filePath}:`, error);
@@ -77,7 +68,6 @@ async function loadQuestionsFromFile(filePath) {
 
 /**
  * Loads all questions from all JSON files in the configured folder
- * @returns {Promise<Array>} Array of all questions from all files
  */
 async function loadAllQuestions() {
   try {
@@ -85,37 +75,43 @@ async function loadAllQuestions() {
 
     // First get all question files
     await getQuestionFiles();
+    const questionFiles = JSON.parse(sessionStorage.getItem("allQuestionFiles"));
 
-    if (allQuestionFiles.length === 0) {
+    if (!questionFiles || questionFiles.length === 0) {
       console.warn("No question files found");
-      return [];
+      sessionStorage.setItem("allQuestions", JSON.stringify([]));
     }
 
     // Load questions from all files
-    const questionPromises = allQuestionFiles.map((filePath) =>
+    const questionPromises = questionFiles.map((filePath) =>
       loadQuestionsFromFile(filePath),
     );
     const questionArrays = await Promise.all(questionPromises);
 
     // Flatten all questions into a single array
-    allQuestions = questionArrays.flat();
+    const allQuestionsArr = questionArrays.flat();
+    sessionStorage.setItem("allQuestions", JSON.stringify(allQuestionsArr));
 
     console.log(
-      `Successfully loaded ${allQuestions.length} total questions from ${allQuestionFiles.length} files`,
+      `Successfully loaded ${allQuestionsArr.length} total questions from ${questionFiles.length} files`,
     );
-    return allQuestions;
+    // No return value; questions are stored in sessionStorage
   } catch (error) {
     console.error("Error loading all questions:", error);
-    return [];
   }
 }
 
 // Export functions for use in other modules
 window.fileLoader = {
-  getQuestionFiles,
   loadQuestionsFromFile,
   loadAllQuestions,
-  // Getter functions for the global variables
-  getAllQuestions: () => allQuestions,
-  getAllQuestionFiles: () => allQuestionFiles,
+  // Getter functions for sessionStorage data
+  getAllQuestions: () => {
+    const questions = sessionStorage.getItem("allQuestions");
+    return questions ? JSON.parse(questions) : [];
+  },
+  getAllQuestionFiles: () => {
+    const files = sessionStorage.getItem("allQuestionFiles");
+    return files ? JSON.parse(files) : [];
+  },
 };
