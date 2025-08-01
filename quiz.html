@@ -4,7 +4,7 @@
     <title>Examen</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles/legacy.css" />
+    <style id="dynamic-style"></style>
     <!-- Load configuration first -->
     <script src="scripts/config.js"></script>
     <!-- Load file loader module -->
@@ -70,6 +70,14 @@
 
       // Display the configuration for verification and load questions
       document.addEventListener("DOMContentLoaded", async function () {
+
+        if (window.notStandalone) {
+          // Set the dynamic style based on configuration
+          document.getElementById("dynamic-style").innerHTML = `
+            @import url('${sessionStorage.getItem("style")}');
+          `;
+        }
+
         if (window.notStandalone) {
           const selectedSubject = sessionStorage.getItem("selectedSubject");
 

@@ -12,11 +12,6 @@ if (!sessionStorage.getItem("allQuestions")) {
   sessionStorage.setItem("allQuestions", JSON.stringify(questionList));
 }
 
-const QUIZ_CONFIG = {
-  // Additional configuration options for future use
-  style: "legacy", // Can be "default", "legacy", or "dark"
-};
-
 // Global boolean variable to indicate if the quiz is running in standalone mode
 window.notStandalone = true;
 /*
