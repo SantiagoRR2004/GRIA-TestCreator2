@@ -91,6 +91,23 @@ def getGithubRepoContents(owner: str, repo: str, path: str = "") -> list:
         return []
 
 
+def purgeEmpty(folderPath: str) -> None:
+    """
+    Remove empty directories in the specified folder.
+
+    Args:
+        - folderPath (str): The path to the folder to purge
+
+    Returns:
+        - None
+    """
+    for root, dirs, files in os.walk(folderPath, topdown=False):
+        for name in dirs:
+            dirPath = os.path.join(root, name)
+            if not os.listdir(dirPath):  # Check if directory is empty
+                os.rmdir(dirPath)  # Remove empty directory
+
+
 def downloadRepository(
     owner: str = "SantiagoRR2004",
     repo: str = "GRIA-TestCreator",
@@ -155,6 +172,9 @@ def downloadRepository(
                     totalDownloaded += 1
                 else:
                     totalFailed += 1
+
+    # Remove empty directories
+    purgeEmpty(databaseFolder)
 
     return (
         totalDownloaded / (totalDownloaded + totalFailed)
