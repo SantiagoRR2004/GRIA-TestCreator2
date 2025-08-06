@@ -76,7 +76,10 @@ async function loadFromGitHubPages(currentUrl) {
       const folderResp = await fetch(folderApiUrl);
       if (!folderResp.ok) continue;
       const folderData = await folderResp.json();
-      if (Array.isArray(folderData) && folderData.some((f) => f.name.endsWith('.json'))) {
+      if (
+        Array.isArray(folderData) &&
+        folderData.some((f) => f.name.endsWith(".json"))
+      ) {
         validFolders.push(folder.name);
       }
     } catch (e) {
@@ -127,10 +130,12 @@ async function loadFromLocalServer() {
         const folderText = await folderResp.text();
         const folderDoc = parser.parseFromString(folderText, "text/html");
         const fileLinks = folderDoc.querySelectorAll("a[href]");
-        if ([...fileLinks].some((l) => {
-          const h = l.getAttribute("href");
-          return h && h.endsWith('.json');
-        })) {
+        if (
+          [...fileLinks].some((l) => {
+            const h = l.getAttribute("href");
+            return h && h.endsWith(".json");
+          })
+        ) {
           validFolders.push(folder);
         }
       } catch (e) {
