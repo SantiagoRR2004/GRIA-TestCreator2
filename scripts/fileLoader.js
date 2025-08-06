@@ -6,15 +6,16 @@
  */
 async function getQuestionFiles() {
   try {
-      const currentUrl = window.location.href;
+    const currentUrl = window.location.href;
     const isGitHubPages = currentUrl.includes("github.io");
 
     if (isGitHubPages) {
       const folderPath = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents/${sessionStorage.getItem("selectedSubject")}`;
     } else {
-      const folderPath = "database/" + sessionStorage.getItem("selectedSubject");
+      const folderPath =
+        "database/" + sessionStorage.getItem("selectedSubject");
     }
-    
+
     console.log(`Loading files from folder: ${folderPath}`);
 
     // Try to fetch the directory listing
@@ -24,8 +25,10 @@ async function getQuestionFiles() {
         if (isGitHubPages) {
           const data = await response.json();
           jsonFiles = data
-            .filter(item => item.type === "file" && item.name.endsWith(".json"))
-            .map(item => item.download_url);
+            .filter(
+              (item) => item.type === "file" && item.name.endsWith(".json"),
+            )
+            .map((item) => item.download_url);
         } else {
           const html = await response.text();
 
