@@ -47,18 +47,15 @@ async function loadAvailableStyles() {
 
   styleSelect.innerHTML = '<option value="">Loading styles...</option>';
   try {
-    const dirResponse = await fetch("styles/");
-    if (!dirResponse.ok) throw new Error("Failed to fetch styles directory");
-    const text = await dirResponse.text();
+    const currentUrl = window.location.href;
+    const isGitHubPages = currentUrl.includes("github.io");
 
-    // Try to extract filenames from the directory listing
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, "text/html");
-    const links = Array.from(doc.querySelectorAll("a"));
-    const styleFiles = links
-      .map((a) => a.getAttribute("href"))
-      .filter((href) => href && href.match(/\.css$/))
-      .map((href) => `styles/${href}`);
+
+    if (isGitHubPages) {
+      styleFiles = await loadAvailableStylesGitHubPages(currentUrl);
+    } else {
+      styleFiles = await loadAvailableStylesLocalServer();
+    }
 
     styleSelect.innerHTML = "";
     styleFiles.forEach((file) => {
@@ -90,6 +87,79 @@ async function loadAvailableStyles() {
     console.error("Error loading styles:", err);
   }
 }
+
+
+
+async function loadAvailableStylesGitHubPages(currentUrl) {
+  // GitHub Pages: Use GitHub API
+  const urlParts = new URL(currentUrl);
+  const pathParts = urlParts.pathname
+    .split("/")
+    .filter((part) => part.length > 0);
+
+  let repoOwner, repoName;
+
+  if (urlParts.hostname.includes("github.io")) {
+    // Standard GitHub Pages: username.github.io/repo-name
+    repoOwner = urlParts.hostname.split(".")[0];
+    repoName = pathParts[0];
+  } else {
+    throw new Error("Unable to parse GitHub Pages URL format: " + currentUrl);
+  }
+
+  if (!repoOwner || !repoName) {
+    throw new Error(
+      "Could not extract repository information from URL: " + currentUrl,
+    );
+  }
+
+  // Use GitHub API to get the files in the styles directory
+  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/styles`;
+  const response = await fetch(apiUrl);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch styles from GitHub API: ${response.statusText}`);
+  }
+  const files = await response.json();
+
+  // Only keep .css files
+  const cssFiles = files
+    .filter((file) => file.type === "file" && file.name.endsWith(".css"))
+    .map((file) => {
+      // Construct the raw.githubusercontent.com URL
+      return `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/styles/${file.name}`;
+    });
+
+  if (cssFiles.length === 0) {
+    throw new Error("No CSS styles found in the GitHub repository styles directory");
+  }
+  
+  return cssFiles;
+}
+
+
+
+
+async function loadAvailableStylesLocalServer() {
+    const dirResponse = await fetch("styles/");
+    if (!dirResponse.ok) throw new Error("Failed to fetch styles directory");
+    const text = await dirResponse.text();
+
+    // Try to extract filenames from the directory listing
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
+    const links = Array.from(doc.querySelectorAll("a"));
+    const styleFiles = links
+      .map((a) => a.getAttribute("href"))
+      .filter((href) => href && href.match(/\.css$/))
+      .map((href) => `styles/${href}`);
+
+    if (styleFiles.length === 0) {
+      throw new Error("No styles found in the styles directory");
+    }
+    return styleFiles;
+}
+
 
 function handleStyleSelection() {
   const styleSelect = document.getElementById("style-select");
