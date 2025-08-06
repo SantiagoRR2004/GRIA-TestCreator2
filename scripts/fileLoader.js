@@ -31,9 +31,9 @@ async function getQuestionFiles() {
         );
       }
 
-      const folderPath = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents/${sessionStorage.getItem("selectedSubject")}`;
+      folderPath = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents/${sessionStorage.getItem("selectedSubject")}`;
     } else {
-      const folderPath =
+      folderPath =
         "database/" + sessionStorage.getItem("selectedSubject");
     }
 
