@@ -48,8 +48,8 @@ async function loadFromGitHubPages(currentUrl) {
 
   console.log(`Detected repository: ${repoOwner}/${repoName}`);
 
-  // Use GitHub API to get folders from the database directory
-  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/database`;
+  // Use GitHub API to get folders from the other repository
+  const apiUrl = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents`;
   console.log("Fetching from API:", apiUrl);
 
   const response = await fetch(apiUrl);
