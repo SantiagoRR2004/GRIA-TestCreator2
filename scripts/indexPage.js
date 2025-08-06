@@ -50,7 +50,6 @@ async function loadAvailableStyles() {
     const currentUrl = window.location.href;
     const isGitHubPages = currentUrl.includes("github.io");
 
-
     if (isGitHubPages) {
       styleFiles = await loadAvailableStylesGitHubPages(currentUrl);
     } else {
@@ -88,8 +87,6 @@ async function loadAvailableStyles() {
   }
 }
 
-
-
 async function loadAvailableStylesGitHubPages(currentUrl) {
   // GitHub Pages: Use GitHub API
   const urlParts = new URL(currentUrl);
@@ -118,7 +115,9 @@ async function loadAvailableStylesGitHubPages(currentUrl) {
   const response = await fetch(apiUrl);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch styles from GitHub API: ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch styles from GitHub API: ${response.statusText}`,
+    );
   }
   const files = await response.json();
 
@@ -131,35 +130,33 @@ async function loadAvailableStylesGitHubPages(currentUrl) {
     });
 
   if (cssFiles.length === 0) {
-    throw new Error("No CSS styles found in the GitHub repository styles directory");
+    throw new Error(
+      "No CSS styles found in the GitHub repository styles directory",
+    );
   }
-  
+
   return cssFiles;
 }
 
-
-
-
 async function loadAvailableStylesLocalServer() {
-    const dirResponse = await fetch("styles/");
-    if (!dirResponse.ok) throw new Error("Failed to fetch styles directory");
-    const text = await dirResponse.text();
+  const dirResponse = await fetch("styles/");
+  if (!dirResponse.ok) throw new Error("Failed to fetch styles directory");
+  const text = await dirResponse.text();
 
-    // Try to extract filenames from the directory listing
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, "text/html");
-    const links = Array.from(doc.querySelectorAll("a"));
-    const styleFiles = links
-      .map((a) => a.getAttribute("href"))
-      .filter((href) => href && href.match(/\.css$/))
-      .map((href) => `styles/${href}`);
+  // Try to extract filenames from the directory listing
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, "text/html");
+  const links = Array.from(doc.querySelectorAll("a"));
+  const styleFiles = links
+    .map((a) => a.getAttribute("href"))
+    .filter((href) => href && href.match(/\.css$/))
+    .map((href) => `styles/${href}`);
 
-    if (styleFiles.length === 0) {
-      throw new Error("No styles found in the styles directory");
-    }
-    return styleFiles;
+  if (styleFiles.length === 0) {
+    throw new Error("No styles found in the styles directory");
+  }
+  return styleFiles;
 }
-
 
 function handleStyleSelection() {
   const styleSelect = document.getElementById("style-select");
