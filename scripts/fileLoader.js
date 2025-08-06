@@ -6,27 +6,42 @@
  */
 async function getQuestionFiles() {
   try {
-    const folderPath = "database/" + sessionStorage.getItem("selectedSubject");
+      const currentUrl = window.location.href;
+    const isGitHubPages = currentUrl.includes("github.io");
+
+    if (isGitHubPages) {
+      const folderPath = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents/${sessionStorage.getItem("selectedSubject")}`;
+    } else {
+      const folderPath = "database/" + sessionStorage.getItem("selectedSubject");
+    }
+    
     console.log(`Loading files from folder: ${folderPath}`);
 
     // Try to fetch the directory listing
     try {
       const response = await fetch(folderPath);
       if (response.ok) {
-        const html = await response.text();
+        if (isGitHubPages) {
+          const data = await response.json();
+          jsonFiles = data
+            .filter(item => item.type === "file" && item.name.endsWith(".json"))
+            .map(item => item.download_url);
+        } else {
+          const html = await response.text();
 
-        // Extract file links from the HTML directory listing
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const links = doc.querySelectorAll("a[href]");
+          // Extract file links from the HTML directory listing
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const links = doc.querySelectorAll("a[href]");
 
-        const jsonFiles = [];
-        links.forEach((link) => {
-          const href = link.getAttribute("href");
-          if (href && href.endsWith(".json")) {
-            jsonFiles.push(`${folderPath}/${href}`);
-          }
-        });
+          jsonFiles = [];
+          links.forEach((link) => {
+            const href = link.getAttribute("href");
+            if (href && href.endsWith(".json")) {
+              jsonFiles.push(`${folderPath}/${href}`);
+            }
+          });
+        }
 
         sessionStorage.setItem("allQuestionFiles", JSON.stringify(jsonFiles));
         console.log(`Found ${jsonFiles.length} JSON files:`, jsonFiles);
