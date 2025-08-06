@@ -10,7 +10,7 @@ async function getQuestionFiles() {
     const isGitHubPages = currentUrl.includes("github.io");
 
     if (isGitHubPages) {
-        const urlParts = new URL(currentUrl);
+      const urlParts = new URL(currentUrl);
       const pathParts = urlParts.pathname
         .split("/")
         .filter((part) => part.length > 0);
@@ -22,7 +22,9 @@ async function getQuestionFiles() {
         repoOwner = urlParts.hostname.split(".")[0];
         repoName = pathParts[0];
       } else {
-        throw new Error("Unable to parse GitHub Pages URL format: " + currentUrl);
+        throw new Error(
+          "Unable to parse GitHub Pages URL format: " + currentUrl,
+        );
       }
 
       if (!repoOwner || !repoName) {
@@ -33,8 +35,7 @@ async function getQuestionFiles() {
 
       folderPath = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents/${sessionStorage.getItem("selectedSubject")}`;
     } else {
-      folderPath =
-        "database/" + sessionStorage.getItem("selectedSubject");
+      folderPath = "database/" + sessionStorage.getItem("selectedSubject");
     }
 
     console.log(`Loading files from folder: ${folderPath}`);
