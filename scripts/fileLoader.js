@@ -10,6 +10,27 @@ async function getQuestionFiles() {
     const isGitHubPages = currentUrl.includes("github.io");
 
     if (isGitHubPages) {
+        const urlParts = new URL(currentUrl);
+      const pathParts = urlParts.pathname
+        .split("/")
+        .filter((part) => part.length > 0);
+
+      let repoOwner, repoName;
+
+      if (urlParts.hostname.includes("github.io")) {
+        // Standard GitHub Pages: username.github.io/repo-name
+        repoOwner = urlParts.hostname.split(".")[0];
+        repoName = pathParts[0];
+      } else {
+        throw new Error("Unable to parse GitHub Pages URL format: " + currentUrl);
+      }
+
+      if (!repoOwner || !repoName) {
+        throw new Error(
+          "Could not extract repository information from URL: " + currentUrl,
+        );
+      }
+
       const folderPath = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents/${sessionStorage.getItem("selectedSubject")}`;
     } else {
       const folderPath =
