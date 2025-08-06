@@ -13,6 +13,9 @@ async function loadSubjectFolders() {
       folders = await loadFromLocalServer();
     }
 
+    // Eliminate folders that start with a dot (hidden folders)
+    folders = folders.filter((folder) => !folder.startsWith("."));
+
     console.log("Found subject folders:", folders);
     populateSubjectDropdown(folders);
     restorePreviousSelection(folders);
