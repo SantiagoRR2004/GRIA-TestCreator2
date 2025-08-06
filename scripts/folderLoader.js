@@ -66,7 +66,24 @@ async function loadFromGitHubPages(currentUrl) {
   const data = await response.json();
 
   // Filter for directories only
-  return data.filter((item) => item.type === "dir").map((item) => item.name);
+  const dirFolders = data.filter((item) => item.type === "dir");
+
+  // For each folder, check if it contains at least one .json file
+  const validFolders = [];
+  for (const folder of dirFolders) {
+    const folderApiUrl = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents/${folder.name}`;
+    try {
+      const folderResp = await fetch(folderApiUrl);
+      if (!folderResp.ok) continue;
+      const folderData = await folderResp.json();
+      if (Array.isArray(folderData) && folderData.some((f) => f.name.endsWith('.json'))) {
+        validFolders.push(folder.name);
+      }
+    } catch (e) {
+      // Ignore errors for individual folders
+    }
+  }
+  return validFolders;
 }
 
 async function loadFromLocalServer() {
@@ -101,15 +118,35 @@ async function loadFromLocalServer() {
       }
     }
 
-    console.log("Discovered folders from directory listing:", folders);
+    // Now, for each folder, check if it contains at least one .json file
+    const validFolders = [];
+    for (const folder of folders) {
+      try {
+        const folderResp = await fetch(`database/${folder}/`);
+        if (!folderResp.ok) continue;
+        const folderText = await folderResp.text();
+        const folderDoc = parser.parseFromString(folderText, "text/html");
+        const fileLinks = folderDoc.querySelectorAll("a[href]");
+        if ([...fileLinks].some((l) => {
+          const h = l.getAttribute("href");
+          return h && h.endsWith('.json');
+        })) {
+          validFolders.push(folder);
+        }
+      } catch (e) {
+        // Ignore errors for individual folders
+      }
+    }
 
-    if (folders.length === 0) {
+    console.log("Discovered folders with .json files:", validFolders);
+
+    if (validFolders.length === 0) {
       throw new Error(
-        "No subject folders could be discovered in the database directory. Please ensure folders exist and are accessible.",
+        "No subject folders with .json files could be discovered in the database directory. Please ensure folders exist and are accessible.",
       );
     }
 
-    return folders;
+    return validFolders;
   } catch (dirError) {
     console.log("Directory listing failed:", dirError.message);
     throw new Error(
