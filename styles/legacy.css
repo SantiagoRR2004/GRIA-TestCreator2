@@ -12,6 +12,12 @@ body {
   z-index: 10;
 }
 
+.back-btn {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .main-btn {
   position: fixed;
   bottom: 0;
