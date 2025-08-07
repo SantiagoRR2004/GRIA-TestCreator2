@@ -125,8 +125,8 @@ async function loadAvailableStylesGitHubPages(currentUrl) {
   const cssFiles = files
     .filter((file) => file.type === "file" && file.name.endsWith(".css"))
     .map((file) => {
-      // Construct the raw.githubusercontent.com URL
-      return `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/styles/${file.name}`;
+      // Construct the URL
+      return `https://${repoOwner}.github.io/${repoName}/styles/${file.name}`;
     });
 
   if (cssFiles.length === 0) {
