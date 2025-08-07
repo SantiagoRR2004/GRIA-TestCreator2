@@ -1,6 +1,6 @@
-import tkinter as tk
+from UTILS import questions, exam
 from tkinter import filedialog
-import questions
+import tkinter as tk
 import random
 import os
 
@@ -182,14 +182,41 @@ class TestCreator:
         """
         Create the button to generate tests.
         """
-        # TODO: Implement test generation functionality
-        pass
+        button = tk.Button(self.window, text="Create tests", command=self.createTests)
+        button.place(
+            relx=1.0, rely=1.0, anchor="se", x=-10, y=-10
+        )  # Places it in the bottom-right with some padding
 
     def createResetButton(self):
         button = tk.Button(self.window, text="Reset", command=self.reset)
         button.place(
             relx=0.0, rely=1.0, anchor="sw", x=10, y=-10
         )  # Bottom-left with padding
+
+    def createTests(self):
+        try:
+            self.numOfExams = int(self.spinboxNExams.get())
+            self.numOfQuestions = int(self.spinboxNQuestions.get())
+
+            folderPath = os.path.join("database", self.folder_path_var.get())
+
+            args = {
+                "folderPath": folderPath,
+                "numberOfExams": self.numOfExams,
+                "numberOfQuestions": self.numOfQuestions,
+            }
+
+            if self.questionsPerTopicVar.get():
+                args["questionsPerTopic"] = self.questions_per_topic_text_var.get()
+
+            exam.examGenerator(
+                **args,
+                # The style has not been implemented yet
+            )
+            self.window.destroy()
+
+        except Exception as e:
+            print("An error occurred: ", e)
 
 
 if __name__ == "__main__":
