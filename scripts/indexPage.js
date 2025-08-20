@@ -1,6 +1,52 @@
 // indexPage.js - Index page initialization and event handling
 
+/**
+ * Initializes repository information and stores it in session storage
+ */
+function initializeRepositoryInfo() {
+  // Check if repository info is already stored
+  const storedIsGitHubPages = sessionStorage.getItem("isGitHubPages");
+  if (storedIsGitHubPages !== null) {
+    return; // Already initialized
+  }
+
+  const currentUrl = window.location.href;
+  const isGitHubPages = currentUrl.includes("github.io");
+  
+  sessionStorage.setItem("isGitHubPages", isGitHubPages.toString());
+
+  if (isGitHubPages) {
+    const urlParts = new URL(currentUrl);
+    const pathParts = urlParts.pathname
+      .split("/")
+      .filter((part) => part.length > 0);
+
+    let repoOwner, repoName;
+
+    if (urlParts.hostname.includes("github.io")) {
+      // Standard GitHub Pages: username.github.io/repo-name
+      repoOwner = urlParts.hostname.split(".")[0];
+      repoName = pathParts[0];
+    } else {
+      throw new Error(
+        "Unable to parse GitHub Pages URL format: " + currentUrl,
+      );
+    }
+
+    if (!repoOwner || !repoName) {
+      throw new Error(
+        "Could not extract repository information from URL: " + currentUrl,
+      );
+    }
+
+    sessionStorage.setItem("repoOwner", repoOwner);
+    sessionStorage.setItem("repoName", repoName);
+  }
+}
+
 function initializeIndexPage() {
+  // Initialize repository information first
+  initializeRepositoryInfo();
   // Load subject folders when page loads
   loadSubjectFolders();
 

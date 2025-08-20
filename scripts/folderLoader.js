@@ -2,13 +2,12 @@
 
 async function loadSubjectFolders() {
   try {
-    const currentUrl = window.location.href;
-    const isGitHubPages = currentUrl.includes("github.io");
+    const isGitHubPages = sessionStorage.getItem("isGitHubPages") === "true";
 
     let folders = [];
 
     if (isGitHubPages) {
-      folders = await loadFromGitHubPages(currentUrl);
+      folders = await loadFromGitHubPages();
     } else {
       folders = await loadFromLocalServer();
     }
@@ -26,30 +25,16 @@ async function loadSubjectFolders() {
   }
 }
 
-async function loadFromGitHubPages(currentUrl) {
-  // GitHub Pages: Use GitHub API
-  const urlParts = new URL(currentUrl);
-  const pathParts = urlParts.pathname
-    .split("/")
-    .filter((part) => part.length > 0);
-
-  let repoOwner, repoName;
-
-  if (urlParts.hostname.includes("github.io")) {
-    // Standard GitHub Pages: username.github.io/repo-name
-    repoOwner = urlParts.hostname.split(".")[0];
-    repoName = pathParts[0];
-  } else {
-    throw new Error("Unable to parse GitHub Pages URL format: " + currentUrl);
-  }
+async function loadFromGitHubPages() {
+  // GitHub Pages: Use GitHub API with stored repository information
+  const repoOwner = sessionStorage.getItem("repoOwner");
+  const repoName = sessionStorage.getItem("repoName");
 
   if (!repoOwner || !repoName) {
-    throw new Error(
-      "Could not extract repository information from URL: " + currentUrl,
-    );
+    throw new Error("Repository information not available in session storage");
   }
 
-  console.log(`Detected repository: ${repoOwner}/${repoName}`);
+  console.log(`Using stored repository: ${repoOwner}/${repoName}`);
 
   // Use GitHub API to get folders from the other repository
   const apiUrl = `https://api.github.com/repos/${repoOwner}/GRIA-TestCreator/contents`;
