@@ -115,14 +115,17 @@ async function loadAvailableStyles() {
     // Sort the styles dictionary alphabetically by keys
     const sortedStylesDict = {};
     Object.keys(stylesDict)
-      .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-      .forEach(key => {
+      .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }))
+      .forEach((key) => {
         sortedStylesDict[key] = stylesDict[key];
       });
 
     // Store sorted styles dictionary in session storage
     sessionStorage.setItem("stylesDict", JSON.stringify(sortedStylesDict));
-    console.log("Styles dictionary stored in session storage:", sortedStylesDict);
+    console.log(
+      "Styles dictionary stored in session storage:",
+      sortedStylesDict,
+    );
 
     styleSelect.innerHTML = "";
     Object.entries(sortedStylesDict).forEach(([styleName, filePath]) => {
