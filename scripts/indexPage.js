@@ -1,6 +1,44 @@
 // indexPage.js - Index page initialization and event handling
 
 /**
+ * Gets the styles dictionary from session storage
+ * @returns {Object} Dictionary with style names as keys and full paths as values
+ */
+function getStylesFromSession() {
+  const stylesJson = sessionStorage.getItem("stylesDict");
+  return stylesJson ? JSON.parse(stylesJson) : {};
+}
+
+/**
+ * Gets a style path by its name from session storage
+ * @param {string} styleName - The name of the style (without .css extension)
+ * @returns {string|null} The full path to the style file, or null if not found
+ */
+function getStylePath(styleName) {
+  const stylesDict = getStylesFromSession();
+  return stylesDict[styleName] || null;
+}
+
+/**
+ * Gets all available style names from session storage
+ * @returns {string[]} Array of style names
+ */
+function getAvailableStyleNames() {
+  const stylesDict = getStylesFromSession();
+  return Object.keys(stylesDict);
+}
+
+/**
+ * Checks if a style exists in the styles dictionary
+ * @param {string} styleName - The name of the style to check
+ * @returns {boolean} True if the style exists, false otherwise
+ */
+function styleExists(styleName) {
+  const stylesDict = getStylesFromSession();
+  return styleName in stylesDict;
+}
+
+/**
  * Initializes repository information and stores it in session storage
  */
 function initializeRepositoryInfo() {
@@ -84,7 +122,8 @@ function initializeIndexPage() {
   }
 }
 
-// Dynamically load available styles from the styles folder and populate the dropdown
+// Dynamically load available styles from the styles folder, populate the dropdown,
+// and store styles as a dictionary in session storage
 async function loadAvailableStyles() {
   const styleSelect = document.getElementById("style-select");
   if (!styleSelect) return;
@@ -100,15 +139,25 @@ async function loadAvailableStyles() {
       styleFiles = await loadAvailableStylesLocalServer();
     }
 
-    styleSelect.innerHTML = "";
+    // Create styles dictionary with name as key and full path as value
+    const stylesDict = {};
     styleFiles.forEach((file) => {
       // Extract only the filename (after the last slash) and remove .css
       const styleName = file
         .split("/")
         .pop()
         .replace(/\.css$/, "");
+      stylesDict[styleName] = file;
+    });
+
+    // Store styles dictionary in session storage
+    sessionStorage.setItem("stylesDict", JSON.stringify(stylesDict));
+    console.log("Styles dictionary stored in session storage:", stylesDict);
+
+    styleSelect.innerHTML = "";
+    Object.entries(stylesDict).forEach(([styleName, filePath]) => {
       const option = document.createElement("option");
-      option.value = file;
+      option.value = filePath;
       option.textContent = styleName;
       styleSelect.appendChild(option);
     });
