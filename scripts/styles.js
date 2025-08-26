@@ -18,12 +18,12 @@ function getAvailableStyleNames() {
 
 // Save current style to session storage
 function saveCurrentStyle(styleName) {
-    sessionStorage.setItem('currentStyle', styleName);
+    sessionStorage.setItem('style', styleName);
 }
 
 // Get current style from session storage
 function getCurrentStyle() {
-    return sessionStorage.getItem('currentStyle');
+    return sessionStorage.getItem('style');
 }
 
 // Switch to next available style

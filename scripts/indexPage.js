@@ -105,19 +105,27 @@ async function loadAvailableStyles() {
     const stylesDict = {};
     styleFiles.forEach((file) => {
       // Extract only the filename (after the last slash) and remove .css
-      const styleName = file
+      const styleName = decodeURIComponent(file)
         .split("/")
         .pop()
         .replace(/\.css$/, "");
       stylesDict[styleName] = file;
     });
 
-    // Store styles dictionary in session storage
-    sessionStorage.setItem("stylesDict", JSON.stringify(stylesDict));
-    console.log("Styles dictionary stored in session storage:", stylesDict);
+    // Sort the styles dictionary alphabetically by keys
+    const sortedStylesDict = {};
+    Object.keys(stylesDict)
+      .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+      .forEach(key => {
+        sortedStylesDict[key] = stylesDict[key];
+      });
+
+    // Store sorted styles dictionary in session storage
+    sessionStorage.setItem("stylesDict", JSON.stringify(sortedStylesDict));
+    console.log("Styles dictionary stored in session storage:", sortedStylesDict);
 
     styleSelect.innerHTML = "";
-    Object.entries(stylesDict).forEach(([styleName, filePath]) => {
+    Object.entries(sortedStylesDict).forEach(([styleName, filePath]) => {
       const option = document.createElement("option");
       option.value = filePath;
       option.textContent = styleName;
@@ -180,8 +188,8 @@ async function loadAvailableStylesGitHubPages(currentUrl) {
   const cssFiles = files
     .filter((file) => file.type === "file" && file.name.endsWith(".css"))
     .map((file) => {
-      // Construct the URL
-      return `https://${repoOwner}.github.io/${repoName}/styles/${file.name}`;
+      // Construct the URL with properly encoded filename
+      return `https://${repoOwner}.github.io/${repoName}/styles/${encodeURIComponent(file.name)}`;
     });
 
   if (cssFiles.length === 0) {
@@ -205,7 +213,7 @@ async function loadAvailableStylesLocalServer() {
   const styleFiles = links
     .map((a) => a.getAttribute("href"))
     .filter((href) => href && href.match(/\.css$/))
-    .map((href) => `styles/${href}`);
+    .map((href) => `styles/${decodeURIComponent(href)}`);
 
   if (styleFiles.length === 0) {
     throw new Error("No styles found in the styles directory");
