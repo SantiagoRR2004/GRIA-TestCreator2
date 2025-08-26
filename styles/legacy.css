@@ -24,6 +24,12 @@ body {
   left: 0;
 }
 
+.style-btn {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
 button {
   border: none;
   padding: clamp(10px, 2vw, 12px) clamp(15px, 3vw, 25px);

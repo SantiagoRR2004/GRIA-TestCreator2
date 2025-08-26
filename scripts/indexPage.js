@@ -1,44 +1,6 @@
 // indexPage.js - Index page initialization and event handling
 
 /**
- * Gets the styles dictionary from session storage
- * @returns {Object} Dictionary with style names as keys and full paths as values
- */
-function getStylesFromSession() {
-  const stylesJson = sessionStorage.getItem("stylesDict");
-  return stylesJson ? JSON.parse(stylesJson) : {};
-}
-
-/**
- * Gets a style path by its name from session storage
- * @param {string} styleName - The name of the style (without .css extension)
- * @returns {string|null} The full path to the style file, or null if not found
- */
-function getStylePath(styleName) {
-  const stylesDict = getStylesFromSession();
-  return stylesDict[styleName] || null;
-}
-
-/**
- * Gets all available style names from session storage
- * @returns {string[]} Array of style names
- */
-function getAvailableStyleNames() {
-  const stylesDict = getStylesFromSession();
-  return Object.keys(stylesDict);
-}
-
-/**
- * Checks if a style exists in the styles dictionary
- * @param {string} styleName - The name of the style to check
- * @returns {boolean} True if the style exists, false otherwise
- */
-function styleExists(styleName) {
-  const stylesDict = getStylesFromSession();
-  return styleName in stylesDict;
-}
-
-/**
  * Initializes repository information and stores it in session storage
  */
 function initializeRepositoryInfo() {
