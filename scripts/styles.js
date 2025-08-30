@@ -30,7 +30,7 @@ function getCurrentStyle() {
 function getCurrentStyleName() {
   const currentStylePath = getCurrentStyle();
   if (!currentStylePath) return null;
-  
+
   const stylesDict = getStylesFromSession();
   // Find the style name that corresponds to the current path
   for (const [styleName, stylePath] of Object.entries(stylesDict)) {
@@ -67,7 +67,7 @@ function switchStyle() {
 
     // Save the new current style (save the path, not the name)
     saveCurrentStyle(stylePath);
-    
+
     console.log(`Switched to style: ${nextStyleName} (${stylePath})`);
   }
 }
@@ -77,16 +77,18 @@ function applyCurrentStyle() {
   const currentStylePath = getCurrentStyle();
   if (currentStylePath) {
     // Remove any existing style switcher links
-    const existingLinks = document.querySelectorAll("link[data-style-switcher]");
+    const existingLinks = document.querySelectorAll(
+      "link[data-style-switcher]",
+    );
     existingLinks.forEach((link) => link.remove());
-    
+
     // Apply the current style
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = currentStylePath;
     link.setAttribute("data-style-switcher", "true");
     document.head.appendChild(link);
-    
+
     console.log(`Applied current style: ${currentStylePath}`);
   }
 }
@@ -112,7 +114,7 @@ function createStyleButton() {
 
 // Apply current style and create button when the DOM is loaded
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function () {
     applyCurrentStyle();
     createStyleButton();
   });
