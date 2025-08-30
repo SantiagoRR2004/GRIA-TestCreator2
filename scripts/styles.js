@@ -16,33 +16,48 @@ function getAvailableStyleNames() {
   return Object.keys(stylesDict);
 }
 
-// Save current style to session storage
-function saveCurrentStyle(styleName) {
-  sessionStorage.setItem("style", styleName);
+// Save current style to session storage (stores the file path)
+function saveCurrentStyle(stylePath) {
+  sessionStorage.setItem("style", stylePath);
 }
 
-// Get current style from session storage
+// Get current style from session storage (returns the file path)
 function getCurrentStyle() {
   return sessionStorage.getItem("style");
 }
 
+// Get current style name from session storage
+function getCurrentStyleName() {
+  const currentStylePath = getCurrentStyle();
+  if (!currentStylePath) return null;
+  
+  const stylesDict = getStylesFromSession();
+  // Find the style name that corresponds to the current path
+  for (const [styleName, stylePath] of Object.entries(stylesDict)) {
+    if (stylePath === currentStylePath) {
+      return styleName;
+    }
+  }
+  return null;
+}
+
 // Switch to next available style
 function switchStyle() {
-  const styles = getStylesFromSession();
+  const stylesDict = getStylesFromSession();
   const styleNames = getAvailableStyleNames();
 
   if (styleNames.length === 0) return;
 
-  const currentStyle = getCurrentStyle();
-  const currentIndex = styleNames.indexOf(currentStyle);
+  const currentStyleName = getCurrentStyleName();
+  const currentIndex = styleNames.indexOf(currentStyleName);
   const nextIndex = (currentIndex + 1) % styleNames.length;
-  const nextStyle = styleNames[nextIndex];
+  const nextStyleName = styleNames[nextIndex];
 
   // Apply the new style
   const existingLinks = document.querySelectorAll("link[data-style-switcher]");
   existingLinks.forEach((link) => link.remove());
 
-  const stylePath = getStylePath(nextStyle);
+  const stylePath = getStylePath(nextStyleName);
   if (stylePath) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -50,8 +65,29 @@ function switchStyle() {
     link.setAttribute("data-style-switcher", "true");
     document.head.appendChild(link);
 
-    // Save the new current style
-    saveCurrentStyle(nextStyle);
+    // Save the new current style (save the path, not the name)
+    saveCurrentStyle(stylePath);
+    
+    console.log(`Switched to style: ${nextStyleName} (${stylePath})`);
+  }
+}
+
+// Apply the current style from session storage
+function applyCurrentStyle() {
+  const currentStylePath = getCurrentStyle();
+  if (currentStylePath) {
+    // Remove any existing style switcher links
+    const existingLinks = document.querySelectorAll("link[data-style-switcher]");
+    existingLinks.forEach((link) => link.remove());
+    
+    // Apply the current style
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = currentStylePath;
+    link.setAttribute("data-style-switcher", "true");
+    document.head.appendChild(link);
+    
+    console.log(`Applied current style: ${currentStylePath}`);
   }
 }
 
@@ -74,9 +110,13 @@ function createStyleButton() {
   document.body.appendChild(styleButton);
 }
 
-// Create the button when the DOM is loaded
+// Apply current style and create button when the DOM is loaded
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", createStyleButton);
+  document.addEventListener("DOMContentLoaded", function() {
+    applyCurrentStyle();
+    createStyleButton();
+  });
 } else {
+  applyCurrentStyle();
   createStyleButton();
 }

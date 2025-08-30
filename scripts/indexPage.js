@@ -139,6 +139,7 @@ async function loadAvailableStyles() {
     const storedStyle = sessionStorage.getItem("style");
     if (storedStyle && styleFiles.includes(storedStyle)) {
       styleSelect.value = storedStyle;
+      console.log("Restored style from session storage:", storedStyle);
     } else if (styleFiles.length > 0) {
       // Choose a random style if none is selected
       const randomStyle =
